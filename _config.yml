@@ -14,13 +14,12 @@ rdiscount:
   extensions: [smart]
 highlighter: true
 
-exclude: [
-  'config.ru',
-  'Gemfile',
-  'Gemfile.lock',
-  node_modules,
-  package.json,
-  'post-deploy-tests.sh',
-  'vendor',
-  'wercker.yml'
-]
+exclude:
+  - 'config.ru'
+  - 'Gemfile'
+  - 'Gemfile.lock'
+  - node_modules
+  - package.json
+  - 'post-deploy-tests.sh'
+  - 'vendor'
+  - 'wercker.yml'
