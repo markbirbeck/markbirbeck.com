@@ -2,7 +2,7 @@
 title: Mark Birbeck's Blog
 email: mark.birbeck@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  On from agile and lean to big data and the semantic web.
+  From agile and lean to big data and the semantic web.
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://markbirbeck.com" # the base hostname & protocol for your site
 twitter_username: markbirbeck
