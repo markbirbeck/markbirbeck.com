@@ -9,10 +9,7 @@ twitter_username: markbirbeck
 github_username:  markbirbeck
 
 # Build settings
-markdown: redcarpet
-rdiscount:
-  extensions: [smart]
-highlighter: true
+markdown: kramdown
 
 exclude:
   - 'config.ru'
