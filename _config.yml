@@ -11,4 +11,7 @@ github_username:  markbirbeck
 # Build settings
 markdown: kramdown
 
-exclude: [node_modules, package.json]
+exclude: [
+  node_modules,
+  package.json
+]
