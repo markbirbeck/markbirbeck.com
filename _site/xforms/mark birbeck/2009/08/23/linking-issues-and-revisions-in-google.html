@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Linking issues and revisions in Google Code</title>
+  <meta name="description" content="We use Google Code a lot in our projects, becauseit provides a great range of tools, with a straightforward interface.">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://markbirbeck.com/xforms/mark%20birbeck/2009/08/23/linking-issues-and-revisions-in-google.html">
+  <link rel="alternate" type="application/rss+xml" title="Mark Birbeck's Blog" href="http://markbirbeck.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Mark Birbeck's Blog</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Linking issues and revisions in Google Code</h1>
+    <p class="post-meta">Aug 23, 2009</p>
+  </header>
+
+  <article class="post-content">
+    <p>We use <a href="http://code.google.com/">Google Code</a> a lot in our projects, because
+it provides a great range of tools, with a straightforward interface.</p>
+
+<p>It’s particularly useful to have version control and issue-tracking in the
+same system, and it’s very easy to cross-reference the two by referring to
+revisions in issue comments, and to issues in the commit messages.</p>
+
+<!-- more -->
+
+<p>On top of that, Google Code provides some nice code review facilities, and
+here too, it’s possible to refer back to revisions and issues.</p>
+
+<p>In this post I’ll outline how we use these tools together in UXF, the
+<a href="http://ubiquity-xforms.googlecode.com/">Ubiquity XForms AJAX library</a>.</p>
+
+<h2 id="everything-should-have-an-issue">Everything should have an issue</h2>
+
+<p>The first thing that’s needed is an issue. This might be an issue in the
+traditional sense, of a bug. But it might also be a desirable feature, that
+someone would like to add. Whatever it is, we shouldn’t really be starting to
+code until we’ve written down what we’re going to do, or what problem we’re
+trying to solve.</p>
+
+<p>Let’s use <a href="http://code.google.com/p/ubiquity-
+xforms/issues/detail?id=515">issue 515</a> as an illustration. At the top we see it has the
+following description:</p>
+
+<pre><code>  We need a UI control that can adhere to data binding restrictions for   
+  xsd:boolean / xforms:boolean. The control may render a checkbox, for   
+  example.  
+  
+  Sample code snippet:  
+  
+      &lt;xf:input ref="check" datatype="xforms:boolean"&gt;  
+        &lt;xf:label&gt;Check: &lt;/xf:label&gt;  
+      &lt;/xf:input&gt;  
+  
+  Based on conversation with John in last week's call, needed in this   
+  iteration (setting priority to critical).  
+</code></pre>
+
+<h2 id="code-reviews-and-issues">Code reviews and issues</h2>
+
+<p>This description is plenty to get started with, so
+<a href="http://code.google.com/u/rahul.akolkar/">Rahul</a> gets on with his development
+and testing, until he is ready for a code review. When he is ready, he commits
+his code to the review area, with the following SVN message:</p>
+
+<pre><code>  [ issue 515 ] Proposed changes for adding a UI control that can bind to boolean  
+  data (renders a checkbox).  
+</code></pre>
+
+<p>You can view this commit at <a href="http://code.google.com/p/ubiquity-
+xforms/source/detail?r=2919">r2919</a>, and as you can see, Google Code provides a
+convenient link to all of the files involved in the commit. GC also provides
+tools for attaching comments to any line in those files.</p>
+
+<p>This revision therefore becomes the location at which the review is conducted,
+perhaps involving many comments from many reviewers.</p>
+
+<p>But note also that Rahul’s reference to “issue 515” has become a link to the
+issue itself. This means that a reviewer has everything they need to start
+reviewing – links to all of the files that have changed, a reference to the
+issue being addressed, and some tools that allow them to add comments to the
+files.</p>
+
+<p>However, anyone viewing the issue directly would not necessarily know that it
+was being worked on, or what the progress was. So to keep things up-to-date,
+Rahul added the following comment to issue 515:</p>
+
+<pre><code>  Code for such a UI control has been proposed for addition in r2919 and review   
+  requested. Changing Status to InReview.  
+</code></pre>
+
+<p>The issue is now not only marked as being <code>InReview</code>, but we also have a
+convenient link to the code review itself. If you were interested in this
+issue, you would now be able to add your comments to the review, try out the
+proposed code, and so on.</p>
+
+<h2 id="committing-the-code-to-trunk">Committing the code to trunk</h2>
+
+<p>At some point the review will finish, and the code will be ready to go into
+the trunk. (There may be other reviews first, but at some point the cycle
+should end.)</p>
+
+<p>In our example, Rahul commits his reviewed code to trunk at
+<a href="http://code.google.com/p/ubiquity-xforms/source/detail?r=2920">r2920</a>, with
+the following message:</p>
+
+<pre><code>  [ issue 515 ] UI control that can bind to boolean data. Committed after favorable  
+  review of r2919, with suggested filename change.  
+</code></pre>
+
+<p>Note that we still have a reference to the issue number, but most importantly,
+we have a reference to the code review at r2919. This means that anyone
+looking at the code that is committed, and who wanted to understand why a
+particular change was made, could find the history of the discussion in the
+code review.</p>
+
+<p>But we’re not finished yet.</p>
+
+<p>If we go back to the code review at r2919, we’ll find that the last comment
+Rahul has added says:</p>
+
+<pre><code>  Committed to trunk in r2920.  
+</code></pre>
+
+<p>Now, anyone who stumbles across the code review directly knows that the code
+they are looking at really did find it’s way into the trunk, and wasn’t left
+hanging there uncommitted, or was abandoned in favour of some other solution.</p>
+
+<h2 id="closing-the-issue">Closing the issue</h2>
+
+<p>The final step is of course to close off the issue, and here it’s important to
+refer to the revision at which the code was committed. In our example, the
+last comment on issue 515 is this:</p>
+
+<pre><code>  Committed to trunk in r2920 after favorable review.  
+  
+  Resolving issue as Fixed.  
+</code></pre>
+
+<p>Now anyone interested specifically in the issue can see not only that it is
+closed, but also where the code is that addressed the issue.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This technique may seem a little laborious, but it actually takes longer to
+describe than to do.</p>
+
+<p>And by following these steps we ensure that we know how a sequence of comments
+ends, whether in an issue or code review.</p>
+
+<p>We need to know how an issue was addressed when it gets marked as fixed, we
+need to know what happens to code after a positive code review, we need to
+know where some code came from that is committed to trunk; in short, no matter
+whether you are looking at one of committed code, an issue, or a code review,
+these procedures ensure that you can easily find the other two.</p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Mark Birbeck's Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Mark Birbeck's Blog</li>
+          <li><a href="mailto:mark.birbeck@gmail.com">mark.birbeck@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/markbirbeck">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">markbirbeck</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/markbirbeck">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">markbirbeck</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">From agile and lean to big data and the semantic web.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

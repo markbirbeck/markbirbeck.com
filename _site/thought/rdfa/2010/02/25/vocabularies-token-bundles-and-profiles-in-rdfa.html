@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Vocabularies, token bundles and profiles in RDFa</title>
+  <meta name="description" content="A number of discussions are taking place in the new [W3C RDFa Working Group][1]about how to enable authors to use tokens in place of URIs. How do we avoidcon...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://markbirbeck.com/thought/rdfa/2010/02/25/vocabularies-token-bundles-and-profiles-in-rdfa.html">
+  <link rel="alternate" type="application/rss+xml" title="Mark Birbeck's Blog" href="http://markbirbeck.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Mark Birbeck's Blog</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Vocabularies, token bundles and profiles in RDFa</h1>
+    <p class="post-meta">Feb 25, 2010</p>
+  </header>
+
+  <article class="post-content">
+    <p>A number of discussions are taking place in the new <a href="http://www.w3.org/2010/02/rdfa/">W3C RDFa Working Group</a>
+about how to enable authors to use tokens in place of URIs. How do we avoid
+conflicts if anyone can define their own tokens? This post looks at how this
+might be achieved.</p>
+
+<!-- more -->
+
+<p>(The following discussion continues some of the themes from last year’s post
+<a href="/blog/2009/04/30/tokenising-the-semantic-web">Tokenising the Semantic Web</a>.)</p>
+
+<h3 id="a-contract-between-consumer-and-publisher">A contract between consumer and publisher</h3>
+
+<p>The first thing to say is that what we are talking about is allowing publishers
+to establish a contract with the page consumer.</p>
+
+<p>Looking at the vocabulary problem this way frees us from having to assume that
+some document will be downloaded to find out how to process everything – the
+so-called <em>follow your nose</em> issue which I’ll come back to.</p>
+
+<p>Instead, at the most fundamental level we simply want to allow Google (for example)
+to be able to say to authors, “if you use some previously agreed upon ‘switch’ in
+your documents, then we’ll interpret your RDFa in some agreed upon way”.</p>
+
+<p>I begin with this because it establishes that we are looking for two things:
+primarily a way to identify a set of tokens (i.e., a way to provide that ‘switch’),
+and only secondarily are we looking for a way to set up retrievable tokens. I’m
+emphasising this because I feel in previous discussions there has been a tendency
+to look <em>only</em> for a solution to the second issue – i.e., the ‘follow-your-nose’
+solution – and this has the tendency to prematurely eliminate simpler solutions
+form consideration.</p>
+
+<h3 id="profile"><code>@profile</code></h3>
+
+<p>I’ve always favoured using the <a href="http://www.w3.org/TR/html401/struct/global.html#profiles">HTML 4.01 profile attribute</a> for this contract,
+since it already exists, and its meaning in HTML 4.01 is very similar to what we
+need.</p>
+
+<p>In particular, the HTML 4.01 spec says:</p>
+
+<blockquote>
+  <p>User agents may use this URI in two ways:</p>
+
+  <ul>
+    <li>
+      <p>As a globally unique name. […]</p>
+    </li>
+    <li>
+      <p>As a link. […]</p>
+    </li>
+  </ul>
+</blockquote>
+
+<p>This is ideal, since it says that we <em>may</em> do FYN, but we also might simply ‘know’
+intrinsically what to do. In other words, it gives us the opportunity to do both,
+which is crucial as we’ll see.</p>
+
+<p>So what would a Google example look like, if we used <code>@profile</code> as the ‘switch’?</p>
+
+<p>Taking an example from the <a href="http://www.google.com/support/webmasters/bin/answer.py?answer=146646">Rich Snippets tutorial</a>, it might look like this
+(note that the original sample uses <code>@property="url"</code>, rather than <code>@rel</code> so I’ve
+retained that here):</p>
+
+<p>``` html</p>
+<div typeof="Person">
+    <span property="name">John Smith</span>
+    <span property="nickname">Smithy</span>
+    <span property="url">http://www.example.com</span>
+    <span property="affiliation">ACME</span>
+    <span rel="address">
+        <span property="locality">Albuquerque</span>
+    </span>
+    <span property="title">Engineer</span>
+    <a href="http://darryl-blog.example.com/" rel="friend">Darryl</a>
+</div>
+<p>```</p>
+
+<p>Note that all I’ve done is to:</p>
+
+<ol>
+  <li>make up a URI for a profile; of course the actual URI is up to Google, not me,
+but as you can see, for the sake of discussion, I’m pretending that there are
+different versions of a profile, and so I’ve built my imaginary URI accordingly;</li>
+  <li>remove the namespace prefixes from the terms in @property and @rel. Of course
+a profile could do all sorts of mappings to get back to the desired URIs.</li>
+</ol>
+
+<p>Now, when Google retrieve a document that has this profile defined, they can assume
+the contract I mentioned – they can assume that the publisher is writing this:</p>
+
+<p><code>html
+@typeof="Person"
+</code></p>
+
+<p>as a shorthand for this:</p>
+
+<p><code>html
+@typeof="http://rdf.data-vocabulary.org/#Person"
+</code></p>
+
+<h4 id="omitting-profile">Omitting <code>@profile</code></h4>
+
+<p>It’s often asked in these discussions, ‘but what if the author doesn’t include the
+profile attribute…aren’t we left with unusable tokens?’ It’s a fair question,
+because after all the tokens now really don’t mean anything.</p>
+
+<p>But from an RDFa standpoint it is no different to the situation when authors omit
+namespace declarations. Here’s the original rich snippets example, but without
+the <code>v</code> prefix declaration:</p>
+
+<p>``` html</p>
+<div typeof="v:Person">
+    <span property="v:name">John Smith</span>
+    <span property="v:nickname">Smithy</span>
+    <span property="v:url">http://www.example.com</span>
+    <span property="v:affiliation">ACME</span>
+    <span rel="v:address">
+        <span property="v:locality">Albuquerque</span>
+    </span>
+    <span property="v:title">Engineer</span>
+    <a href="http://darryl-blog.example.com/" rel="friend">Darryl</a>
+</div>
+<p>```</p>
+
+<p>As you can see, it’s no more meaningful than our ‘missing profile’ example.</p>
+
+<h4 id="mixing-profiles">Mixing profiles</h4>
+
+<p>So, we’ve established that <code>@profile</code> can be used as a ‘switch’ to enable a
+whole set of tokens, and all that an organisation needs to do is to explain
+clearly what mapping will take place between tokens and URIs, when that switch
+is used; as long as authors know how their data is going to be interpreted,
+then organisations like Google and Yahoo! can simply publish a profile URI and
+indicate what it means.</p>
+
+<p>But what if our document-publisher adds another profile to their document?
+<code>@profile</code> is defined in HTML 4.01 to be a space-separated list of values,
+so this is already legitimate, but what should happen when we get this:</p>
+
+<p><code>html
+&lt;body
+ xmlns:Person="http://rdf.data-vocabulary.org/#Person"
+ xmlns:name="http://rdf.data-vocabulary.org/#name"
+ .
+ .
+ .
+&gt;
+    &lt;!-- Some documentation about the profile here, to make it human readable. --&gt;
+&lt;/body&gt;
+</code></p>
+
+<p>Making a profile into an HTML document gives us the possibility of profiles loading
+other profiles. For example, recall that I pretended that the 2010 version of this
+profile included the CC profile; this ‘import’ might be achieved as easily as this:</p>
+
+<p><code>html
+&lt;body
+ xmlns:Person="http://rdf.data-vocabulary.org/#Person"
+ xmlns:name="http://rdf.data-vocabulary.org/#name"
+ .
+ .
+ .
+</code></p>
+
+<p>If profiles could import other profiles, it would also make versioning incredibly easy.
+For example, if our fictitious 2010 profile were to enhance the 2009 version by adding
+both the CC profile and a new predicate called ‘foo’, we could simply declare the 2010
+profile as including the 2009 profile, rather than expressing all of the tokens again:</p>
+
+<p>``` html</p>
+<body xmlns:foo="http://rdf.data-vocabulary.org/#foo">
+    <!-- Some documentation about the profile here, to make it human readable. -->
+</body>
+<p>```</p>
+
+<h4 id="json-profiles">JSON profiles</h4>
+
+<p>For various reasons I think the basic level of conformance for expressing token bundles
+should be to use JSON. Given that we are only concerned with name/value pairs, then all
+we need is this:</p>
+
+<p><code>javascript
+{
+    "Person": "http://rdf.data-vocabulary.org/#Person",
+    "name": "http://rdf.data-vocabulary.org/#name",
+    .
+    .
+    .
+}
+</code></p>
+
+<p>However, since the most common application of this will be to retrieve tokens in browsers,
+we should really use <a href="http://en.wikipedia.org/wiki/JSON#JSONP">JSONP</a> so that the browser gets a chance to retrieve the data.
+Something like this would do it:</p>
+
+<p><code>javascript
+document.meta.addMappings({
+    "Person": "http://rdf.data-vocabulary.org/#Person",
+    "name": "http://rdf.data-vocabulary.org/#name",
+    .
+    .
+    .
+});
+</code></p>
+
+<p>This could easily be achieved by our theoretical parser calling out to a theoretical
+server with the following URL:</p>
+
+<pre><code>http://rdf.data-vocabulary.org/profile/2010.json?jsonp=document.meta.addMappings
+</code></pre>
+
+<h3 id="handling-conflicts">Handling conflicts</h3>
+
+<p>If a generic parser is able to load token bundles from all quarters, then we now have
+a situation where the short-form tokens that authors are able to use can be ambiguous.</p>
+
+<p>There are two issues here, one is to decide what should happen in a conflict situation,
+and the other is how to let authors know.</p>
+
+<h4 id="last-wins">Last wins</h4>
+
+<p>The first issue – what should happen when a conflict occurs – <em>could</em> be resolved by
+saying that duplicate tokens are an error, but I think it’s obvious that this is the
+worst approach we could take. To avoid errors we’d need to establish central registries,
+and then we’d have immediately flipped from a decentralised solution to a centralised one.</p>
+
+<p>It would be better to say that tokens are loaded in the order in which they appear in the
+document, and newer tokens simply override older ones.</p>
+
+<p>Not only is this clear, but it would also allow for scenarios such as one organisation
+creating a profile that makes a small number of modifications to someone else’s profile,
+by overriding certain tokens. And it would also allow minor changes to be made to a
+profile without having to issue a whole new profile:</p>
+
+<p>``` html</p>
+<div typeof="Person">
+    <span property="http://rdf.data-vocabulary.org/#name">John Smith</span>
+    <span property="nickname">Smithy</span>
+    .
+    .
+    .
+</div>
+<p>```</p>
+
+<p>The author could of course reverse the order of the <code>@profile</code> URIs, but this might start
+getting a little difficult to keep track of whilst editing.</p>
+
+<p>A better solution is to make use of ‘@profile everywhere’, and to scope the token bundle.
+An author can then place their <code>@profile</code> declaration closer to the mark-up that it relates
+to. In the following example we have the FOAF profile as our default throughout the document,
+but when we insert a Google-specific notion of a <code>Person</code> we also put the profile identifier
+on the root element:</p>
+
+<p>``` html</p>
+<div typeof="Person" profile="http://rdf.data-vocabulary.org/profile/2009">
+    <span property="name">John Smith</span>
+    <span property="nickname">Smithy</span>
+    .
+    .
+    .
+</div>
+<p>```</p>
+
+<p>Now it’s very clear what is going on, since we’ve already said that ‘last wins’.</p>
+
+<p>Another scenario is the reverse of the one we’ve just seen; the author actually wants to use
+the FOAF property inside <em>this</em> mark-up. To achieve this they could once again use <code>@profile</code>
+on the element to override the previously set profile:</p>
+
+<p>``` html</p>
+<div typeof="Person" profile="http://rdf.data-vocabulary.org/profile/2009">
+    <span property="name" profile="http://xmlns.com/foaf/0.1/profile">John Smith</span>
+    .
+    .
+    .
+</div>
+<p>```</p>
+
+<p>Alternatively, they could spell out the URI in full, as we saw before. But another interesting
+approach is to use another token, and there are a couple of ways this could be done.</p>
+
+<p>One way would be for authors to simply define their own token in the document. In this example
+the author creates <code>foaf-name</code> to distinguish it from <code>name</code>:</p>
+
+<p>``` html</p>
+<div typeof="Person" profile="http://rdf.data-vocabulary.org/profile/2009">
+    <span property="foaf-name">John Smith</span>
+    .
+    .
+    .
+</div>
+<p>```</p>
+
+<p>However, a better way would be for the profile’s authors to have included a suitable prefix in
+the profile itself. For example, Google’s profile might look like this (note the declaration of
+<code>v</code>):</p>
+
+<p><code>html
+&lt;body
+ xmlns:Person="http://rdf.data-vocabulary.org/#Person"
+ xmlns:name="http://rdf.data-vocabulary.org/#name"
+ .
+ .
+ .
+&gt;
+    &lt;!-- Some documentation about the profile here, to make it human readable. --&gt;
+&lt;/body&gt;
+</code></p>
+
+<p>Now not only are <code>Person</code> and <code>name</code> available to authors who use this profile, but so is <code>v</code>.
+This means that authors can use <code>v:Person</code> if they ever need to be clear about what they are
+doing.</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>The <code>profile</code> attribute is an obvious way to allow data publishers and data consumers to agree
+on what is being published. It is sufficiently open to allow it to be used in both RDFa and
+Microformats, but its definition also leaves open a way to implement ‘follow your nose’ token
+retrieval.</p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Mark Birbeck's Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Mark Birbeck's Blog</li>
+          <li><a href="mailto:mark.birbeck@gmail.com">mark.birbeck@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/markbirbeck">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">markbirbeck</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/markbirbeck">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">markbirbeck</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">From agile and lean to big data and the semantic web.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

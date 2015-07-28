@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Tokenising the semantic web</title>
+  <meta name="description" content="This particular thought piece is aimed at people who are familiar with aspectsof the semantic web. You don&#8217;t need to be an expert to understand the art...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://markbirbeck.com/rdfa/thought%20piece/2009/04/29/tokenising-semantic-web.html">
+  <link rel="alternate" type="application/rss+xml" title="Mark Birbeck's Blog" href="http://markbirbeck.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Mark Birbeck's Blog</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Tokenising the semantic web</h1>
+    <p class="post-meta">Apr 29, 2009</p>
+  </header>
+
+  <article class="post-content">
+    <p>This particular thought piece is aimed at people who are familiar with aspects
+of the semantic web. You don’t need to be an expert to understand the article,
+and you might find it interesting, even if you know next to nothing about the
+semantic web. But I’m putting this little disclaimer right at the top here, so
+that no-one can say, “there you go…I told you the semantic web was difficult
+to understand, and Birbeck’s latest blog-post just proves it”.</p>
+
+<!-- more -->
+
+<h1 id="gps">GPS</h1>
+
+<p>Myself, I have no idea how GPS works – I just press the buttons, and I either
+arrive at my destination, in awe of the technology, or I complain when I’m
+directed to follow a road that doesn’t actually exist. But just because I want
+GPS to be easy to use, doesn’t mean that the underlying technology has to be
+easy to comprehend. There’s nothing simple about getting a satellite or two
+into space, for example. Likewise the maths involved in the Doppler Effect –
+in fact, even the way that the Doppler Effect is used to help us to locate
+ourselves – is not easy. So the people who work on improving GPS for the rest
+of us need a space in which to talk to each other without constantly being
+told that trilateration is too difficult for the average user. This piece is a
+little bit like that; its intent is to spark a discussion amongst the men and
+women in white coats who are trying to make the semantic web easier for
+everyone else to <em>use</em>. One day the technology behind the semantic web might
+also be easier to <em>understand</em> – but that’s not today’s problem. So let’s get
+started.</p>
+
+<h1 id="unique-identifiers">Unique Identifiers</h1>
+
+<p>A fundamental component of the semantic web is the URI. A different way of
+saying this is that a central requirement of being able to manage human
+knowledge is having the ability to uniquely identify things. We could use any
+scheme to identify the things that humans want to store information about, but
+it just so happens that through an interesting sequence of events relating to
+the internet, the most popular and enduring has been the URI.</p>
+
+<h1 id="identifying-terms">Identifying terms</h1>
+
+<p>To illustrate; when it comes to talking about something, we often have the
+notion of its <em>title</em>. It might be the title of a book or an album, but it
+could also be the title of a chapter within the book or a track within the
+album. The idea of a <em>title</em> might also reasonably apply to jobs that people
+do, vacancies advertised to fill those jobs, and magazines used to carry the
+adverts to fill the vacancies. Now, if we want to store this kind of
+information in our computer systems in such a way that we can reuse it in
+interesting ways, then it makes sense to know when we are using this concept
+of <em>title</em>. The <em>de facto</em> way to do this is to mint a URI, and the most
+commonly used URI for the notion of ‘a title’ was created by the Dublin Core:
+<img src="/files/tokenise-dc-title.png" alt="The Dublin Core 'title' URI" /> If we all agree
+to use this identifier in our data when we want to talk about the <em>title</em> of
+something, then when we move data from one application to another, or request
+data using web services, we should have no trouble knowing what the data
+means, and therefore what we can do with it.</p>
+
+<h1 id="vocabularies">Vocabularies</h1>
+
+<p>URIs for terms like <em>title</em> often come as a package. For example, if you’re in
+the business of providing a title for a book, then you probably also want to
+indicate who wrote it, what the nature of the book’s copyright is, when the
+book was published, who by, and so on. The <a href="http://dublincore.org/">Dublin Core Metadata
+Initiative</a> is an example of a collection of these
+terms, often called a <em>vocabulary</em>: <img src="/files/tokenise-dc-uris.png" alt="Dublin Core terms with common URI
+part" /> As you can see, such a collection of terms
+– and here we’re only showing a handful from the full Dublin Core list – has
+a common part to the URI of each item. In a sense, it’s the URI of the
+vocabulary <em>itself</em> which acquires significance – in this case
+<em>http://purl.org/dc/terms/</em> – and all of the other pieces of information are
+items that occur within that vocabulary: <img src="/files/tokenise-dc-vocabulary.png" alt="Vocabulary terms have a common URI
+base" /></p>
+
+<h1 id="abbreviating-uris">Abbreviating URIs</h1>
+
+<p>The ‘common part’ we just saw – the vocabulary URI – is often swapped out
+for a prefix to make things easier to write. All that is needed is some way to
+indicate that a prefix maps to some vocabulary URI. For example, we might use
+the prefix ‘dc’ to refer to the Dublin Core vocabulary: <img src="/files/tokenise-dc-prefix-mapping.png" alt="Vocabulary terms
+have a common URI base" /> We can now
+reuse this prefix to stand in for the vocabulary URI, when using terms from
+the vocabulary: <img src="/files/tokenise-dc-
+prefix-use.png" alt="Vocabulary terms have a common URI base" /> This is certainly a labour-saving device, and when used with
+multiple vocabularies at the same time, can make data more readable. When
+using XML-based languages, the mapping of a prefix to a vocabulary can be
+easily achieved using XML namespace prefixes. For example, the following
+snippet of RDFa uses XML namespace prefixes to make terms from both the Dublin
+Core and FOAF vocabularies available:  <img src="/files/tokenise-dc-and-foaf-prefixes.png" alt="Mapping prefixes for DC and
+FOAF" /> Once the mappings have been
+established – i.e., the namespace mappings declared – they can be used in
+mark-up to abbreviate the URIs:</p>
+
+<h1 id="dr-ivan-herman">Dr Ivan Herman</h1>
+
+<h2 id="curies">CURIEs</h2>
+
+<p>The technique used in this RDFa example to specify terms from a vocabulary, is
+defined in the document <a href="http://www.w3.org/TR/curie/">CURIE Syntax 1.0</a>. The
+approach is simply that a value like <em>foaf:name</em> – which is called a CURIE –
+is processed in the following way:</p>
+
+<ol>
+  <li>the part <em>before</em> the colon is extracted (<em>foaf</em>);</li>
+  <li>the corresponding URI is found, by locating the XML namespace designated using the prefix (<em>http://xmlns.com/foaf/0.1/</em>);</li>
+  <li>the part <em>after</em> the colon (<em>name</em>) is then appended to this URI, to give a full URI (<em>http://xmlns.com/foaf/0.1/name</em>).
+Applying this process to each of the CURIEs in the example above would give
+the following mappings: <img src="/files
+/tokenise-dc-and-foaf-in-use.png" alt="Full URIs using prefixes for DC and FOAF" /> As you can see, these steps have the effect
+of recreating the original URIs.</li>
+</ol>
+
+<h1 id="tokens-for-vocabularies">Tokens for vocabularies</h1>
+
+<p>So let’s recap a moment. We know that we need URIs to identify things,
+otherwise our dumb computers will have no idea what we’re talking about. But
+we also know that URIs are too long and unwieldy, so we want to abbreviate
+them. Using a substitution prefix like <code>dc:</code> or <code>foaf:</code> and the technique
+defined in the CURIE syntax specification is a convenient way to shorten URIs.
+But we have to recognise that we haven’t actually mapped tokens to URIs here.
+Instead, we’ve created a token to represent the <em>vocabulary</em>, and then
+appended terms from the vocabulary to it. It’s still a useful technique, but
+we’ll see in a moment why it’s nowhere near as powerful as it could be. To
+help us understand how we could do better, we need to take a little diversion
+into Microformats.</p>
+
+<h1 id="microformats">Microformats</h1>
+
+<p>The Microformats technique allows authors to embed tokens into their mark-up
+which can be spotted by software, and used to make some actions available to
+the end user. A collection of tokens is called a microformat. For example, an
+author may use the collection of tokens in the <a href="http://microformats.org/wiki/hcard">hCard
+microformat</a>, to provide information about
+a user, like so (example taken from the specification):</p>
+
+<p><a href="http://tantek.com/">Tantek Celik</a></p>
+
+<p>This piece of mark-up indicates a person’s full name (“Tantek Celik”), and the
+URL of their web-site (“http://tantek.com/”). It’s pretty straightforward for
+software to scan a document looking for these tokens, and once located, to
+make the data available in some way. For example, Tantek’s details could be
+easily added to your contact list, passed to your mobile phone via Bluetooth,
+hooked up to Skype, and so on.</p>
+
+<h2 id="limitations">Limitations</h2>
+
+<p>To those involved in the semantic web, the limitations to Microformats are
+well known. The main problem is that it is not always clear where the matching
+piece of information can be found, once a triggering token has been located.
+In the example above, there is no <em>generic</em> rule that says ‘whenever you find
+an element with a class of <em>url</em>, take the associated <code>@href</code> value as the
+URL’. Similarly, there is no generic rule that says ‘whenever you find an
+element with a class of <em>fn</em>, take the associated inner text of the element as
+the full-name value’. Instead, a parser needs to know the intricacies of the
+hCard format, and must look for the specific settings. Such a parser can only
+be used on one microformat, and there is nothing that can be generalised for
+use when parsing other microformats. The other criticism that is often
+levelled at Microformats is that by using unqualified tokens, the collection
+of formats cannot be scaled for use in the semantic web. This is because it is
+not possible to tell which vocabulary should be used when values like ‘fn’ are
+encountered (although the presence of <em>root class names</em> like ‘vcard’ do go
+some way to reducing this problem). The usual response from semantic web
+enthusiasts is to favour the use of qualified terms over tokens – as we saw
+in the earlier sections, with the use of CURIES – so that the vocabulary
+being used is unambiguous. But I’d like to break with this convention and show
+that the token approach used in Microformats should be regarded as a strength.</p>
+
+<h2 id="strengths">Strengths</h2>
+
+<p>Whilst it’s obviously true that having unqualified values like ‘fn’ and ‘url’
+make it difficult to bring Microformats into the semantic web, we should be
+careful not to throw the baby out with the bathwater; what may be a weakness
+in terms of scalability, is a <em>strength</em> when it comes to authoring documents.
+Authors need only use simple values in their documents, without having to get
+involved with XML namespaces or other forms of prefix mappings. Of course, at
+some point our dumb machines still need to know how to map the token, but it’s
+a lot better to get the machines to do the work, and allow authors the freedom
+of using simple tokens.</p>
+
+<h1 id="tokens-for-uris">Tokens for URIs</h1>
+
+<p>So the problem we need to solve is to make it possible to create tokens that
+are easy for authors to use, but at the same time ensure that the mechanism
+used to create the tokens is scalable. We discussed above how the most widely
+used technique for shortening URIs at the moment is to create a prefix, which
+can then be used to represent vocabularies, from which terms can be used:
+<img src="/files/tokenise-dc-and-foaf-in-
+use.png" alt="Full URIs using prefixes for DC and FOAF" /> This technique fits our second requirement of being scalable, since
+the prefixes ensure there is no chance that a term in one vocabulary could be
+confused with a term in another, even if the terms have the same name. But
+this extra power doesn’t really address our goal of making authoring easier;
+yes, it gives us the ability to disambiguate terms across the entire internet,
+and that is important – but the way it achieves this becomes overkill when
+authoring individual documents, where there is almost never confusion about
+the use of terms. The simple proposal then is that rather than tokens being
+limited to representing <em>vocabularies</em>, they can represent an <em>entire URI</em>. In
+fact, this is already possible; a token already maps to a full URI, as we saw
+above when creating prefixes for the Dublin Core and FOAF vocabularies:
+<img src="/files/tokenise-dc-and-foaf-prefixes.png" alt="Mapping prefixes for DC and FOAF" />
+But the problem is that these tokens are then used as prefixes for other
+values, which must then be combined to create the full URI: <img src="/files/tokenise-dc-and-foaf-in-use.png" alt="Full URIs using
+prefixes for DC and FOAF" /> To make
+things easier for authors we should allow the first step of mapping a token to
+a full URI to be the <em>only</em> step: <img src="/files
+/tokenise-dc-and-foaf-tokens.PNG" alt="Full URIs expressed using tokens" /> We can now look at how we might carry out
+this mapping.</p>
+
+<h2 id="arcane-knowledge">Arcane knowledge</h2>
+
+<p>One way to provide the mapping from a token to a full URI is to simply build
+it into whatever language and associated parser needs it. This is the approach
+we took with RDFa, as I’ll explain. The definition of the CURIE syntax
+<em>already allows</em> for predefined tokens to be mapped directly to URIs. The idea
+is that any language using CURIEs can provide a list of tokens that map to
+full URIs, and these should be processed before any other CURIE processing
+takes place. In fact, if the tokens are ‘known’ then no further processing
+needs to happen. This technique is used to good effect in the RDFa
+specification, where tokens such as <em>license</em> and <em>next</em> are defined to map to
+a full URI in the XHTML namespace. This means that authors are able to use
+mark-up such as this:  or this:  <img src="/a-photo.jpg" alt="" /> to indicate which license
+applies to their document or photographs, and they don’t need to express any
+namespaces or provide a prefix. Instead, the RDFa parser simply ‘knows’ about
+the mapping from a token such as <em>license</em>, to the full URI
+(<em>http://www.w3.org/1999/xhtml/vocab#license</em>). And although it wasn’t
+designed this way, a similar example of using arcane knowledge to map a token
+to a URI can be found in SPARQL; the token <em>a</em> can be used to represent the
+full URI <em>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</em> (see <a href="http://www.w3.org/TR/rdf-sparql-
+query/#abbrevRdfType">SPARQL Query
+Language for RDF, section 4.2.4 rdf:type</a>). Once again we have a very convenient mapping, but once
+again a processor would need to have arcane knowledge of this mapping.</p>
+
+<h2 id="extending-curies">Extending CURIEs</h2>
+
+<p>Whilst relying on arcane knowledge gets us so far, as a solution it will
+ultimately suffer from the same problem as Microformats – an inability to
+scale. Of course, some people will argue that this is not an issue for RDFa,
+since the main motivation for introducing the token technique into CURIEs was
+to allow the commonly used HTML/XHTML values like <em>next</em> and <em>prev</em> to map to
+meaningful RDF – and that problem was solved. (The alternative would have
+been to insist that authors write their mark-up like this:  which would
+probably have killed RDFa in the water.) But whatever the original motivations
+for the CURIE-token technique, it provides us with an interesting way to
+achieve our goal of making RDFa documents easier to author. A simple
+modification to the CURIE processing rules would be to say that if a token is
+the same as a prefix declaration, then that URI should be used. This would
+still allow languages such as XHTML+RDFa or SPARQL to define their own tokens
+through ‘arcane knowledge’. But most importantly, it would allow authors to
+define their own tokens, too, and open up the possibility of collections of
+common tokens to be created.</p>
+
+<h3 id="problems-with-using-namespace-declarations">Problems with Using Namespace Declarations</h3>
+
+<p>Returning to our earlier RDFa example, it would seem straightforward to recast
+it like this:</p>
+
+<h1 id="dr-ivan-herman-1">Dr Ivan Herman</h1>
+
+<p>As you can see, the declaration of a mapping from a token to a URI is achieved
+in exactly the way it was before, by using namespace declarations, but in use
+the token is completely substituted by the URI, rather than forming part of
+the URI as it does in current practice. A key advantage though, is that the
+author is now free to choose the token that maps to the URI. For example, in
+the mark-up we have been using, the <em>foaf:name</em> property
+(<em>http://xmlns.com/foaf/0.1/name</em>) is represented by the token <em>name</em>, but it
+could just as easily have been represented by the token <em>fn</em>, so as to form an
+association with the name of the property in hCard and vCard:</p>
+
+<h1 id="dr-ivan-herman-2">Dr Ivan Herman</h1>
+
+<p>Similarly the <em>foaf:homepage</em> property (<em>http://xmlns.com/foaf/0.1/homepage</em>)
+could be represented by the token <em>url</em>, whilst the <em>foaf:Person</em> type
+(<em>http://xmlns.com/foaf/0.1/Person</em>) is represented by the token <em>vcard</em>, both
+of which are used in hCard:</p>
+
+<h1 id="dr-ivan-herman-3">Dr Ivan Herman</h1>
+
+<p><a href="http://www.w3.org/People/Ivan/">Ivan Herman’s homepage</a></p>
+
+<p>Note that this is not intended to be understood by a Microformats hCard
+parser, since it is not using the hCard syntax. The idea is simply to provide
+a mechanism by which tokens can be used to express full URIs, so as to ease
+the authoring of documents, and the sharing of semantic formats.</p>
+
+<h1 id="specifying-token-mappings">Specifying token mappings</h1>
+
+<p>We’ve seen how the XML namespace mechanism can be used to specify tokens in
+the document, but there are two major problems with this approach; the first
+is that it mixes mappings from the document’s ‘infrastructure’ with mappings
+about the documents content, when in real use, there is rarely a coincidence
+of the two. And the second issue is that due to the hierarchical nature of
+namespaces, it is impossible to import a set of mappings into a document from
+some external source, and so share tokens.</p>
+
+<h2 id="token-mappings-inline">Token mappings inline</h2>
+
+<p>To illustrate the first problem, take a property like <em>foaf:name</em>; we know
+that such a property could be used in an SVG document, an XHTML document, an
+HTML5 document, a XAML document, and so on. The namespaces used to create the
+SVG, XHTML, HTML5, and XAML documents are unlikely to appear as statements in
+the metadata, whilst the FOAF vocabulary is even less likely to appear on an
+element or attribute in the mark-up. In other words, there is no architectural
+need for the prefix mapping technique used in the RDFa itself to be the same
+as the prefix mapping technique used for defining the host document. The CURIE
+specification already allows host languages the freedom to determine how
+prefixes should be mapped, so here we propose a new attribute called <code>@token</code>
+to contain a list of token mappings. The exact syntax of <code>@token</code> doesn’t
+matter (for the moment) so much as the use to which it can be put; it might
+look something like this:</p>
+
+<h1 id="dr-ivan-herman-4">Dr Ivan Herman</h1>
+
+<p><a href="http://www.w3.org/People/Ivan/">Ivan Herman’s homepage</a></p>
+
+<p>or this:</p>
+
+<h1 id="dr-ivan-herman-5">Dr Ivan Herman</h1>
+
+<p><a href="http://www.w3.org/People/Ivan/">Ivan Herman’s homepage</a></p>
+
+<p>The key point though, is that the token definition for use in document
+semantics, is now completely independent of namespaces used in document
+structure.</p>
+
+<h2 id="packaging-up-token-mappings">Packaging up token mappings</h2>
+
+<p>If all we did was to use <code>@token</code> instead of <code>@xmlns</code> then things might be
+easier to understand, but we wouldn’t be able to do anything more than we can
+today. The problem with namespaces is that they only apply to the element they
+are attached to, and all of its children, which means that there is no way to
+add namespaces in one part of a document that will apply to another part –
+and that, in turn, means there is no way to import prefix mappings, using
+namespaces. However, HTML already provides a way to indicate that a particular
+set of tokens is being used, by way of the <code>@profile</code> attribute. The only
+problem is that there is no clear definition as to what format the document
+referred to by <code>@profile</code> should take. (See <a href="http://www.w3.org/TR/html401/struct/global.html#adef-profile">the profile
+attribute</a> in
+the HTML 4.01 spec.) From an RDFa point of view the easiest technique would be
+for <code>@profile</code> to refer to another RDFa document. For example, we could create
+a simple RDFa document that contains nothing other than our tokens:  and then
+make use of this in our first example, as follows:</p>
+
+<h1 id="dr-ivan-herman-6">Dr Ivan Herman</h1>
+
+<p><a href="http://www.w3.org/People/Ivan/">Ivan Herman’s homepage</a></p>
+
+<p>It’s easy to see how files of commonly used tokens for particular purposes can
+be created and shared. And it’s also possible to imagine going much further,
+and for tokens to be derived from a SKOS or OWL document, expressed in RDFa
+and referred to using <code>@profile</code>. This is something we’ll return to in a
+future post.</p>
+
+<h1 id="summary">Summary</h1>
+
+<p>To summarise the argument; first, we know that we need to be able to tokenise
+URIs, because they tend to be long and unwieldy. However, whilst the current
+use of prefixes to abbreviate URIs is useful, it only allows us to tokenise
+URIs that are used to identify vocabularies, and not full URIs. It’s also not
+ideal that these prefixes are being expressed using a document architecture
+mechanism – <code>@xmlns</code>. By adding a new attribute – <code>@token</code> – to the <em>CURIE
+processing</em> rules, we can tokenise full URIs, which gives authors the same
+level of simplicity that Microformats has. The key difference though, is that
+this tokenisation is completely scaleable, and so overcomes one of the major
+drawbacks of Microformats.</p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Mark Birbeck's Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Mark Birbeck's Blog</li>
+          <li><a href="mailto:mark.birbeck@gmail.com">mark.birbeck@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/markbirbeck">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">markbirbeck</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/markbirbeck">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">markbirbeck</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">From agile and lean to big data and the semantic web.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

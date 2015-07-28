@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Microformats and RDFa are not as far apart as people think</title>
+  <meta name="description" content="The BBC have caused a bit of a storm recently by announcing that they won&#8217;tbe using the hCalendar Microformat on their pages. The reason is thewell-kno...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://markbirbeck.com/mark%20birbeck/rdfa/thought%20piece/2008/06/24/microformats-and-rdfa-are-not-as-far.html">
+  <link rel="alternate" type="application/rss+xml" title="Mark Birbeck's Blog" href="http://markbirbeck.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Mark Birbeck's Blog</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Microformats and RDFa are not as far apart as people think</h1>
+    <p class="post-meta">Jun 24, 2008</p>
+  </header>
+
+  <article class="post-content">
+    <p>The BBC have caused a bit of a storm recently by <a href="http://www.bbc.co.uk/blogs/radiolabs/2008/
+06/removing_microformats_from_bbc.shtml">announcing that they won’t
+be using the hCalendar Microformat</a> on their pages. The reason is the
+<a href="http://www.webstandards.org/2007/04/27/haccessibility/">well-known problems with
+accessibility</a>. One of
+the proposed solutions is to look at <a href="http://rdfa.info">RDFa</a>.</p>
+
+<!-- more -->
+
+<h2 id="confusing-syntax-with-vocabulary">Confusing syntax with vocabulary</h2>
+
+<p>Whilst the BBC obviously understand their web-pages, and are conscious of the
+issues of accessibility, they may have demonstrated here a bit of a
+misunderstanding of the semantic nature of the web. And in my view, most of
+the follow-up discussions I’ve seen fall into the same trap.</p>
+
+<p>The main point is to not confuse the syntax used to convey information, with
+the information itself–the vocabulary. The reason I think this is what is
+happening is that when the BBC say “we’ll be looking at the possible use of
+RDFa”, they may have missed the point that when you use RDFa, you still need a
+vocabulary, and if one doesn’t exist, you’ll need to create one.</p>
+
+<p>It would be far better to look at the Microformat that is already in use (in
+this case, <a href="http://microformats.org/wiki/hcalendar">hCalendar</a>), and see if it
+can be tweaked to make use of the generic nature of RDFa–but that requires a
+new approach to both Microformats and RDFa.</p>
+
+<p>So before panic takes hold of the Microformats community, or smugness grips
+the RDFa one, let’s try to get underneath what these two technologies are
+actually about.</p>
+
+<h2 id="microformats-are-about-vocabulary">Microformats are about vocabulary</h2>
+
+<p>Microformats were devised as a way to let authors add little pieces of
+semantics to their documents, in such a way that applications could make use
+of them. An application might be a search engine that can improve indexing and
+search, or a browser that can display extra information based on the embedded
+values.</p>
+
+<p>There are three key advances that Microformats made. The first was to say that
+you can still do useful things, even if you only have a small amount of
+information. This was pretty radical, since up until that point the semantic
+web seemed to be an ‘all or nothing’ proposition. (For many people it still
+is.)</p>
+
+<p>The second was to say that we should be able to publish semantic information
+in the same easy way that we publish web-pages–through content-management
+systems, blogs, and so on.</p>
+
+<p>But the third advance is perhaps the most important; Microformats essentially
+said that we can teach end-users about a specific set of terms that help them
+do something useful, without having to teach them ‘big picture’ stuff. This
+meant that authors could be taught just enough mark-up to add contact details,
+events, licensing information, geo locations…and so on.</p>
+
+<h2 id="problems-with-microformats">Problems with Microformats</h2>
+
+<p>Microformats opened the way for a new approach to the semantic web, but it
+does of course have its weaknesses.</p>
+
+<p>The first is that it ‘overloads’ many of the HTML attributes to carry semantic
+information, in such a way that they can interfere with the normal use of the
+attribute. This is why people are now having accessibility problems, because
+some of the attributes are trying to play two or three roles.</p>
+
+<p>The second weakness is that mixing vocabularies starts to get messy; because
+each Microformat is a combination of vocabulary and syntax, then it is
+actually quite specific, and they can therefore interfere with each other.</p>
+
+<p>The third weakness if that because each vocabulary also requires ‘syntax’,
+then even if a perfectly usable vocabulary exists, it has to be ‘converted’ to
+be a Microformat.</p>
+
+<h2 id="rdfa-is-about-syntax">RDFa is about syntax</h2>
+
+<p>RDFa started life at around the same time as Microformats, and holds with many
+of the same philosophies–that the semantic web is never going to happen
+unless metadata is as easy to publish as a web-page, and that authors should
+have an easy way to add information without having to understand the ‘big
+picture’.</p>
+
+<p>But RDFa set out to address a slightly different set of problems; instead of
+defining new vocabularies, it sought to create a generic syntax that can
+accommodate <em>any</em> vocabulary, allowed multiple vocabularies on a page, and did
+so in <em>any</em> mark-up language.</p>
+
+<p>And whereas the Microformat community took as a fundamental principle that
+they wouldn’t modify HTML at all, we took advantage of one of the key
+extension mechanisms of HTML which is that unrecognised attributes should
+simply be ignored by an HTML parser (i.e., they should not throw an error). So
+by adding a handful of new attributes to HTML and XHTML, RDFa doesn’t
+interfere with the existing uses of attributes, such as for accessibility.</p>
+
+<h2 id="microformats-and-rdfa">Microformats and RDFa</h2>
+
+<p>Ultimately, if people can put their prejudices to one side, there should be no
+reason why these two ground-breaking technologies can’t work together.</p>
+
+<p>To illustrate, take the <a href="http://microformats.org/wiki
+/rel-license">rel-license Microformat</a>. It’s a nice, simple, self-contained document about how to use
+the <code>license</code> value in <code>@rel</code> and <code>@rev</code>. To specify the license of a current
+document, an author can add something like this:</p>
+
+<pre><code>&lt;a href="http://creativecommons.org/licenses/by/2.0/" rel="license&gt;cc by 2.0&lt;/a&gt;
+</code></pre>
+
+<p>This is perfectly valid HTML, making use of <code>@rel</code> with <code>@href</code>, and it’s nice
+and easy to explain–the key component of Microformats.</p>
+
+<p>But it’s not widely known that this is also perfectly valid RDFa.</p>
+
+<p>However, RDFa takes this a step further, and provides authors with the ability
+to talk about other things, not just the current document.</p>
+
+<h3 id="individual-licenses-for-images">Individual licenses for images</h3>
+
+<p>A common situation is to have a number of images on a page, and to want to
+indicate the license of each of them. With RDFa you now can.</p>
+
+<p>Imagine we have this image in our page:</p>
+
+<pre><code>&lt;img src="http://www.flickr.com/photos/detached/2529217704/" /&gt;
+</code></pre>
+
+<p>Our previous example of a license link needs only minor modification to make
+it refer to the image:</p>
+
+<pre><code>&lt;a about="http://www.flickr.com/photos/detached/2529217704/"  
+ href="http://creativecommons.org/licenses/by-nc-sa/2.0/deed.en_GB" rel="license  
+&gt;  
+  cc by 2.0  
+&lt;/a&gt;
+</code></pre>
+
+<p>It’s difficult to argue that this is complex, since it’s only a minor change
+for authors.</p>
+
+<h3 id="extending-rel-license">Extending <code>rel-license</code></h3>
+
+<p>But there is no reason why this formulation shouldn’t also be included in
+<code>rel-license</code>; after all, the key purpose of a Microformat is to promote re-
+use and provide bite-size pieces that authors can quickly learn and put to
+work.</p>
+
+<p><code>rel-license</code> could remain ‘the last word’ on the use of <code>license</code> in <code>@rel</code>
+and <code>@rev</code>, but it could also provide information about how to use <code>license</code>
+in HTML, XHTML and RDFa. That way there is only one place that authors need to
+go.</p>
+
+<h2 id="solving-the-bbc-problem">Solving the BBC problem</h2>
+
+<p>I said at the beginning that the BBC still needed to create a vocabulary, even
+if it adopted RDFa. In other words, it may gain a solution to the
+accessibility problem by dropping hCalendar, but it loses the advantage of
+having a community-maintained syntax.</p>
+
+<p>That doesn’t mean we have the answer straight away, but I strongly suggest
+that we don’t throw the baby out with the bathwater here.</p>
+
+<p>The Microformats community is responsible for getting many people to look
+again at the semantic web, after having been put off by the more theoretical
+approach. But it needs to build on this success, and look at updating its
+formats to make use of the new attributes and generic parsing algorithm
+provided by RDFa. That way it can solve its technical problems, and continue
+to lead the way in defining ‘agile’ vocabularies for the semantic web.</p>
+
+<p>And whilst the RDFa community has shown that it is possible to have a syntax
+that supports the ‘full’ semantic web, without it needing to exist in a
+separate space of complex mark-up and extra documents, it should remember that
+a generic syntax is nothing without vocabularies.</p>
+
+<p>I’ve just started work on an <a href="/mark-birbeck/blog/2009/04/23/more-rdfa-
+goodness-from-uk-government-web-sites">exciting project to mark up job vacancies in the
+UK public sector, using RDFa</a>. And although the use of RDFa will make
+it very easy for departments to publish the metadata, it’s still going to
+require the creation of a vocabulary of terms. I’m going to be looking all
+over for suitable terms and vocabularies, and I’ll certainly be looking at how
+Microformats might fit in.</p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Mark Birbeck's Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Mark Birbeck's Blog</li>
+          <li><a href="mailto:mark.birbeck@gmail.com">mark.birbeck@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/markbirbeck">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">markbirbeck</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/markbirbeck">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">markbirbeck</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">From agile and lean to big data and the semantic web.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

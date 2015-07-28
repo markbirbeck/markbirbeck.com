@@ -6,35 +6,1704 @@
 </description>
     <link>http://markbirbeck.com/</link>
     <atom:link href="http://markbirbeck.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 28 Jul 2015 16:14:51 +0100</pubDate>
-    <lastBuildDate>Tue, 28 Jul 2015 16:14:51 +0100</lastBuildDate>
+    <pubDate>Tue, 28 Jul 2015 16:33:50 +0100</pubDate>
+    <lastBuildDate>Tue, 28 Jul 2015 16:33:50 +0100</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
-        <title>Welcome to Jekyll!</title>
-        <description>&lt;p&gt;You’ll find this post in your &lt;code&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+        <title>Using Knife to launch EC2 instances without a Chef Server</title>
+        <description>&lt;p&gt;In this post we look at how we can make it easy to launch servers on Amazon’s EC2.
+We’ll use Knife to launch our instances since it gives us a lot of other features
+that we can make use of when managing our servers. But we’ll do this without the
+complication of setting up a Chef Server.&lt;/p&gt;
 
-&lt;p&gt;To add new posts, simply add a file in the &lt;code&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+&lt;!-- more --&gt;
 
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+&lt;h2 id=&quot;launching-instances&quot;&gt;Launching instances&lt;/h2&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Tom&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &amp;#39;Hi, Tom&amp;#39; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The easiest way to launch a server on EC2 is almost certainly via the control panel.
+From there it’s straightforward to choose an instance size, select a region to
+launch into, and so on. However, given that we are always striving to make as much
+of our work as possible reproducible then we need a command-line way to launch servers.
+The two main options are the Amazon CLI tools and Opscode’s Knife which is part of the
+Chef collection of resources, although for more advanced situations it’s also
+possible to roll your own with libraries like &lt;a href=&quot;http://boto.readthedocs.org/en/latest/index.html&quot;&gt;Boto&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://github.com/jekyll/jekyll-help&quot;&gt;Jekyll’s dedicated Help repository&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&quot;the-amazon-cli-tools&quot;&gt;The Amazon CLI tools&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&quot;http://aws.amazon.com/developertools/351&quot;&gt;Amazon CLI tools&lt;/a&gt; do everything that you need, but are pretty raw. In the
+early days of Amazon’s service there was little else, but now I’d recommend
+using something like Knife.&lt;/p&gt;
+
+&lt;h3 id=&quot;knife&quot;&gt;Knife&lt;/h3&gt;
+
+&lt;p&gt;Knife is part of the &lt;a href=&quot;http://wiki.opscode.com/display/chef/Home&quot;&gt;Chef suite of tools&lt;/a&gt;, and is used for carrying out general
+tasks to do with cookbooks and servers. It supports a plug-in architecture and
+one of the plug-ins that has been added provides a number of commands for EC2.&lt;/p&gt;
+
+&lt;p&gt;Knife and Chef are usually used in conjunction with a Chef server which keeps
+track of the servers you’ve launched, their capabilities, the cookbooks and
+recipes you have available, and which of them have been applied to which servers.
+However, recently we’re seeing an increasing number of people using Chef Solo to
+get up and running quickly managing Chef cookbooks and recipes by referencing
+individual servers directly.&lt;/p&gt;
+
+&lt;p&gt;The problem is that whilst we can use the Knife cookbook tools without a Chef
+Server, we can’t use the EC2 commands, so in the instructions that follow we
+include a small patch to make this possible.&lt;/p&gt;
+
+&lt;p&gt;This small change is a big win, since it gives us a convenient tool for launching
+servers and a powerful way to manage our local cookbooks – all without needing
+additional infrastructure. And of course it keeps open the possibility of moving
+up to Chef Server in the future.&lt;/p&gt;
+
+&lt;h2 id=&quot;installing-knife&quot;&gt;Installing Knife&lt;/h2&gt;
+
+&lt;p&gt;The quickest way to get up and running with Chef and Knife is by following steps
+2 and 3 from Opscode’s &lt;a href=&quot;http://wiki.opscode.com/display/chef/Fast+Start+Guide&quot;&gt;Fast Start Guide&lt;/a&gt;. And if you’re using a Mac for
+your development (and after all, who isn’t thinking differently these days?) you
+can get up and running even more quickly by simply installing XCode (to get some
+Ruby dependencies) and then Chef. Here’s how:&lt;/p&gt;
+
+&lt;h3 id=&quot;install-xcode&quot;&gt;Install XCode&lt;/h3&gt;
+
+&lt;p&gt;If you have the &lt;em&gt;Mac OS X Install&lt;/em&gt; DVD that came with your Mac to hand then open
+the &lt;em&gt;Optional Installs&lt;/em&gt; folder and then click on &lt;em&gt;XCode&lt;/em&gt; to install it (you
+can accept the default settings). If you’ve lost the disk or you just can’t be
+bothered to get out of your chair to find it, then get it from the App Store
+(just be prepared for a long download).&lt;/p&gt;
+
+&lt;h3 id=&quot;install-chef&quot;&gt;Install Chef&lt;/h3&gt;
+
+&lt;p&gt;Once XCode is installed run the following command to install Chef which will also
+install Knife. Note that we’re also asking for the EC2 and GitHub plugins to be
+installed as well:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+gem install \
+  chef \
+  net-ssh net-ssh-multi \
+  fog highline \
+  knife-ec2 knife-github-cookbooks
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;There may be a short delay, but after a bit you should get some messages indicating
+what has been installed. Once complete, check that all is well by running &lt;code&gt;knife&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+knife --version
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;You should get back something like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+Chef: 0.10.8
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that we have the tools we need to add a little bit of configuration information
+and patch one of the EC2 sub-commands.&lt;/p&gt;
+
+&lt;h3 id=&quot;configure-ec2-security&quot;&gt;Configure EC2 security&lt;/h3&gt;
+
+&lt;p&gt;If you’ve already installed the Amazon CLI tools then you will have some of what
+you need here, but if you haven’t then you’ll need to add your key IDs to your
+environment and set a default region. The easiest way to do this is to tack the
+values on to the end of your bash profile. You can either edit &lt;code&gt;~/.bash_profile&lt;/code&gt;
+(still assuming a Mac environment) directly or follow these steps:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Add a few variables that will be used in the next command (without the squiggly
+brackets):&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+AAKI={your access key ID}
+ASAK={your secret access key}
+AZ={your preferred availability zone, such as eu-west-1a}
+REGION={your preferred region, such as eu-west-1}
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;You don’t &lt;em&gt;have&lt;/em&gt; to do this but it makes it just a little bit easier to run the
+next command (otherwise you’ll have to paste each line individually, modifying
+the values as you go).&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Paste the following into a terminal window. It will use the variables we’ve
+just defined to update your profile:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+cat &amp;gt;&amp;gt; ~/.bash_profile &amp;lt;&amp;lt; EOF
+# Set up Amazon access:
+#
+export AWS_ACCESS_KEY_ID=${AAKI}
+export AWS_SECRET_ACCESS_KEY=${ASAK}
+export EC2_AVAILABILITY_ZONE=${AZ}
+export EC2_REGION=${REGION}
+EOF
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;To get a shell with these new settings applied, either open a new terminal
+window, or reload the profile in the current window:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+source ~/.bash_profile
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;create-a-knife-configuration-file&quot;&gt;Create a Knife configuration file&lt;/h3&gt;
+
+&lt;p&gt;The next step is to add a Knife configuration file which will pick up these
+default settings. You can paste the following commands into a terminal window:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+mkdir ~/.chef
+cat &amp;gt; ~/.chef/knife.rb &amp;lt;&amp;lt; EOF
+# EC2 sub-command
+#
+knife[:availability_zone] = &quot;#{ENV['EC2_AVAILABILITY_ZONE']}&quot;
+knife[:aws_access_key_id] = &quot;#{ENV['AWS_ACCESS_KEY_ID']}&quot;
+knife[:aws_secret_access_key] = &quot;#{ENV['AWS_SECRET_ACCESS_KEY']}&quot;
+knife[:chef_mode] = &quot;solo&quot;
+knife[:region] = &quot;#{ENV['EC2_REGION']}&quot;
+EOF
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Note that we could have placed our keys and regions directly into this file but
+there are a number of advantages to the way we’re doing it here. The first is
+that you don’t need to worry about keeping you &lt;code&gt;knife.rb&lt;/code&gt; file secret, which
+means you could share it with colleagues if you want to get them set up quickly.
+Second, the environment variables that we’re picking up are also used by other
+Amazon-related tools which means (a) if you are using these tools already you
+will already have these values set and (b) if you ever change these values you’ll
+only ever need to do it in one place and all of your tools will benefit.&lt;/p&gt;
+
+&lt;h3 id=&quot;modify-the-knife-ec2-plugin&quot;&gt;Modify the Knife EC2 plugin&lt;/h3&gt;
+
+&lt;p&gt;The final step is to make a very small change to the EC2 plugin which will make
+it easier to use with Chef Solo. The &lt;a href=&quot;https://github.com/opscode/knife-ec2&quot;&gt;EC2 plugin for Knife is maintained by Opscode&lt;/a&gt;
+and is designed to be used with Chef Server. This means that once a new server
+has been launched on Amazon, Knife will then attempt to register it with Chef
+Server and bootstrap it with Chef. We could just ignore the error message that
+we get at the end, but since it’s pretty straightforward to patch and override
+plugins, we’ll do that.&lt;/p&gt;
+
+&lt;p&gt;Knife plugins have a nice hierarchical architecture, which means that we can
+easily override one of the EC2 sub-commands without having to override all of
+them. So first create a directory for your ‘personal’ plugins:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+mkdir -p ~/.chef/plugins/knife/
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now get a copy of the patched ‘server create’ plugin:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+curl -L https://raw.github.com/gist/2049991/170e0fd2a5b9c5b8532a385d990d04400b182fb4/ec2_server_create.rb \
+  &amp;gt; ~/.chef/plugins/knife/ec2_server_create.rb
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;We should now be all set to launch a server.&lt;/p&gt;
+
+&lt;h2 id=&quot;launching-a-server&quot;&gt;Launching a server&lt;/h2&gt;
+
+&lt;p&gt;The command to launch a server in Knife is part of the EC2 plug-in, and looks
+something like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+knife ec2 server create \
+  --groups=default \
+  --region=eu-west-1 --availability-zone=eu-west-1a \
+  --image=ami-895069fd --flavor=m1.medium \
+  --ssh-user=ubuntu \
+  --ssh-key=keyname --identity-file=~/.ssh/keyname.pem
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;--groups&lt;/code&gt; parameter indicates which security group you want to use. (A
+security group is basically a set of firewall settings.) If you want to provide
+a list of groups then just use a comma:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+--groups=http,solr,ssh
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;--region&lt;/code&gt; and &lt;code&gt;--availability-zone&lt;/code&gt; parameters determine where your server
+will be located and can be omitted if you set them in your environment earlier.&lt;/p&gt;
+
+&lt;p&gt;The type of server you want to launch is determined by the &lt;code&gt;--image&lt;/code&gt; and &lt;code&gt;--flavor&lt;/code&gt;
+parameters. There are 32- and 64-bit AMIs, varying by operating system, and in
+this example I’m using a 64-bit version of Ubuntu 11.10 (&lt;code&gt;ami-895069fd&lt;/code&gt;). Each
+permutation is repeated in each region so you’ll need to make sure that you get
+the right AMI for the region you want to launch the server in. I usually use AMIs
+from the &lt;a href=&quot;http://uec-images.ubuntu.com/releases/&quot;&gt;Ubuntu Cloud Images&lt;/a&gt; list.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;--ssh-user&lt;/code&gt; parameter determines the user name that will be used to access
+the server, and is set in the AMI; if you use AMIs from other sources then you’ll
+need to know the name that was used when creating the image.&lt;/p&gt;
+
+&lt;p&gt;Finally, the &lt;code&gt;--ssh-key&lt;/code&gt; parameter refers to the name of a key pair that you will
+have previously created in Amazon, perhaps via the management console. The
+&lt;code&gt;--identity-file&lt;/code&gt; parameter refers to the private part of that key pair.&lt;/p&gt;
+
+&lt;p&gt;In addition to the keys and region information we can also add &lt;code&gt;image&lt;/code&gt; and &lt;code&gt;flavor&lt;/code&gt;
+to &lt;code&gt;knife.rb&lt;/code&gt;. For example:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+cat &amp;gt; ~/.chef/knife.rb &amp;lt;&amp;lt; EOF
+# EC2 sub-command
+#
+knife[:availability_zone] = &quot;#{ENV['EC2_AVAILABILITY_ZONE']}&quot;
+knife[:aws_access_key_id] = &quot;#{ENV['AWS_ACCESS_KEY_ID']}&quot;
+knife[:aws_secret_access_key] = &quot;#{ENV['AWS_SECRET_ACCESS_KEY']}&quot;
+knife[:image] = &quot;ami-895069fd&quot;
+knife[:flavor] = &quot;m1.medium&quot;
+knife[:chef_mode] = &quot;solo&quot;
+knife[:region] = &quot;#{ENV['EC2_REGION']}&quot;
+EOF
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This would allow you to launch a new server like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+knife ec2 server create \
+  --groups=default \
+  --ssh-user=ubuntu \
+  --ssh-key=keyname --identity-file=~/.ssh/keyname.pem
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Whilst the server is launching you’ll see a lot of information flying by about
+what is going on, including the fact that Knife has bootstrapped Chef for us.
+At the end we get a list of details such as the instance ID and the public and
+private DNS names and IP addresses, but note that since we’re using Chef Solo,
+Knife has not bootstrapped Chef in the way that it normally would – but we’ll
+come to that in a follow-up post on using Chef with our instances.&lt;/p&gt;
+
+&lt;h2 id=&quot;managing-instances&quot;&gt;Managing instances&lt;/h2&gt;
+
+&lt;p&gt;You can list and terminate instances with Knife, as well as issue commands to one
+or more instances.&lt;/p&gt;
+
+&lt;h3 id=&quot;listing-running-instances&quot;&gt;Listing running instances&lt;/h3&gt;
+
+&lt;p&gt;To see a list of running instances for a particular region use the &lt;code&gt;server list&lt;/code&gt;
+sub-command:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+knife ec2 server list --region=eu-west-1
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;You’ll get a list of the instances with their public and private IP addresses,
+instance IDs, AMI used, and so on.&lt;/p&gt;
+
+&lt;h3 id=&quot;accessing-a-server&quot;&gt;Accessing a server&lt;/h3&gt;
+
+&lt;p&gt;We can connect to the new server using SSH with the public IP address or DNS name
+that was given to us within the output of the Knife &lt;code&gt;server create&lt;/code&gt; or &lt;code&gt;server
+list&lt;/code&gt; commands. The usual &lt;code&gt;ssh&lt;/code&gt; command can be used:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+ssh -i ~/.ssh/keyname.pem ubuntu@176.34.221.207
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Note that the RSA key and user name must be the same as those used to launch the
+server with Knife.&lt;/p&gt;
+
+&lt;h3 id=&quot;terminating-a-running-instance&quot;&gt;Terminating a running instance&lt;/h3&gt;
+
+&lt;p&gt;You can shutdown a server with its instance ID which you can get from the &lt;code&gt;server
+list&lt;/code&gt; command. For example:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+knife ec2 server delete i-a4ddeced --region=eu-west-1
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;You’ll be asked to confirm that you really want to shutdown the server, although
+you can add a &lt;code&gt;-y&lt;/code&gt; option if you’re feeling confident. If you run the list
+command again you’ll see that the &lt;code&gt;State&lt;/code&gt; column says &lt;code&gt;shutting-down&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;That’s it – you now have a way to quickly launch and terminate servers in the
+cloud which is a bit easier than the usual Amazon command-line tools. What’s more,
+the tool we use to start and stop instances gets us onto the Chef ladder for
+easy deployment and configuration. We’ll look at how we can use Chef on our
+instances in a future post.&lt;/p&gt;
 
 </description>
-        <pubDate>Thu, 12 Mar 2015 15:07:06 +0000</pubDate>
-        <link>http://markbirbeck.com/jekyll/update/2015/03/12/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">http://markbirbeck.com/jekyll/update/2015/03/12/welcome-to-jekyll.html</guid>
+        <pubDate>Fri, 16 Mar 2012 16:30:00 +0000</pubDate>
+        <link>http://markbirbeck.com/boto/chef/deployment/development/ec2/knife/2012/03/16/using-knife-to-launch-ec2-instances-without-a-chef-server.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/boto/chef/deployment/development/ec2/knife/2012/03/16/using-knife-to-launch-ec2-instances-without-a-chef-server.html</guid>
         
+        
+        <category>boto</category>
+        
+        <category>chef</category>
+        
+        <category>deployment</category>
+        
+        <category>development</category>
+        
+        <category>ec2</category>
+        
+        <category>knife</category>
+        
+      </item>
+    
+      <item>
+        <title>Choosing a Blogging Platform</title>
+        <description>&lt;p&gt;The great thing about not having blogged for a few years is that I’ve just had
+the opportunity to survey the blogging landscape. If you’re drinking &lt;em&gt;lean start-up&lt;/em&gt;
+kool aid or you’re a technical blogger, then what I learned may be useful to you.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2 id=&quot;the-cloud-for-everything&quot;&gt;The Cloud for Everything&lt;/h2&gt;
+
+&lt;p&gt;The two blogging platforms I used in the past were Blogger (for my posts about
+XForms and internet applications) and Drupal (for my company posts). The first
+thing I knew for certain was that I didn’t want to
+manage my blog infrastructure. After too many holidays interrupted by trying to
+resolve problems, I spent a number of years putting anything that I could into the cloud.&lt;/p&gt;
+
+&lt;p&gt;The initial part of the journey to the cloud involved replacing services that
+we were already running on our own servers with those provided by others. For
+example:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;email, calendar, contacts and documents were moved to Google Apps;&lt;/li&gt;
+  &lt;li&gt;everyday files were placed in Dropbox and Sugar Sync and more system-related material
+into S3 (usually thanks to the excellent &lt;a href=&quot;http://cyberduck.ch/&quot;&gt;Cyberduck&lt;/a&gt;);&lt;/li&gt;
+  &lt;li&gt;SVN and Trac servers were shutdown in favour of Bitbucket, which later gave way to
+Google Code and then Github;&lt;/li&gt;
+  &lt;li&gt;Bugzilla was dropped in favour of LightHouse;&lt;/li&gt;
+  &lt;li&gt;SugarCRM servers were switched off in favour of Salesforce;&lt;/li&gt;
+  &lt;li&gt;and mail servers were dropped for Mailchimp.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Then, with lots of servers doing nothing I stopped our contract with WebFusion
+and shipped the servers back to the office…where of course they then gathered dust
+because everything was now being moved to RightScale+EC2, Google App Engine and
+Heroku. Soon the only server left in the office
+was a flakey DNS box and even that was eventually shut down in favour of DNS Made Easy, and
+then Route 53.&lt;/p&gt;
+
+&lt;p&gt;In short, if there was anything that someone else could manage better than us we let them,
+until our office ended up with a single computer per person and a wi-fi router. Now the
+only services we managed were web-sites for our customers and ourselves, and these were
+on servers running at Amazon.&lt;/p&gt;
+
+&lt;p&gt;But when I say ‘except for our own web-site’ that hides a lot. Since we were building
+web-sites for other companies (albeit with a lot of back-end functionality) it seemed
+that we really ought to be managing our own. Even though the site was
+actually just a collection of blog-posts and an enquiry form, it still felt wrong
+to use something like Blogger or WordPress to convey our ideas and plans to the world,
+so we continued with Drupal.&lt;/p&gt;
+
+&lt;h2 id=&quot;drupal&quot;&gt;Drupal&lt;/h2&gt;
+
+&lt;p&gt;In retrospect it’s interesting that my blogs hung on for so long without being ‘outsourced’.
+Perhaps it’s because
+Drupal does quite a nice job of serving up good blogs by way of its plethora of modules –
+it really is very easy to add tags, comments, avatars, images, OAuth and RSS feeds, and
+it’s also a snap to ensure that your latest pearls of wisdom from Twitter and Facebook
+appear on your site.&lt;/p&gt;
+
+&lt;p&gt;But it’s not just how powerful Drupal is; the quality of blogging platforms two years ago
+really wasn’t a patch on what it is today, and that is probably one of the key things
+that has changed. When you look now at the state-of-the-art with
+Blogger, Posterous, WordPress and Tumblr, you really have to come up with some pretty
+solid reasons as to why you would maintain your own database and web front-end.&lt;/p&gt;
+
+&lt;h2 id=&quot;blogger&quot;&gt;Blogger&lt;/h2&gt;
+
+&lt;p&gt;So I’ve obviously convinced myself to drop Drupal and the whole self-hosting
+approach, but what should I replace it with?&lt;/p&gt;
+
+&lt;p&gt;My other blog faired reasonably well on Blogger over the years, so that platform was obviously
+a candidate. Google have recently revamped the look-and-feel, and it’s also easy to import and
+export information, create new posts from a variety of places, and use external
+JavaScript components such as &lt;a href=&quot;http://disqus.com/&quot;&gt;Disqus&lt;/a&gt;. All of these things make Blogger
+a strong candidate but in the end the amount of Google branding they add to your blog,
+coupled with the lack of support for Markdown (more on this below) meant that I
+decided against it.&lt;/p&gt;
+
+&lt;p&gt;However, it’s worth stressing that Blogger’s ability to easily import and export
+your posts, as well as its support for Disqus (which means that you can take with
+you the comments people leave on your blog, should you move platforms), meant I really
+had to think hard about it. I believe that structuring your use of services in
+such a way that you can move your data around whenever you want to should be an
+important part of the lean mindset, and Blogger really helps that.&lt;/p&gt;
+
+&lt;h2 id=&quot;posterous&quot;&gt;Posterous&lt;/h2&gt;
+
+&lt;p&gt;Right from the start I really liked the feel of Posterous. Highlights for me are that
+you can create public and private spaces and add new posts from just about anywhere.
+But before long I hit problems.&lt;/p&gt;
+
+&lt;p&gt;The first issue came when I tried to import data from my old blogs. Posterous
+can’t import from Drupal but since it can read from Blogger I tried to use that
+as an intermediary to get from Drupal to Posterous. Unfortunately it failed, and
+even after some very prompt and friendly help from Posterous support it still couldn’t be made to work.&lt;/p&gt;
+
+&lt;p&gt;It shows how much I liked Posterous though that at one point I considered abandoning
+my old posts in favour of cherry-picking a few…until that is, I
+discovered that it was not possible to use Disqus. That was a
+show-stopper because one of the most important aspects of my new blog is that I should
+depend as little as possible on any particular platform, and having both posts
+&lt;em&gt;and&lt;/em&gt; comments embedded in the platform seemed too risky.&lt;/p&gt;
+
+&lt;h2 id=&quot;tumblr&quot;&gt;Tumblr&lt;/h2&gt;
+
+&lt;p&gt;Tumblr was initially lower down my list than Posterous because of the way that it
+presents itself as an activity stream and a community, rather than a blog – I liked it,
+but it felt like I was going against the flow to use it as a place to write technical
+articles. But after
+a little playing around I actually started to like it more than Posterous, and with
+a few tweaks the longer technical posts could be made to look less out of place.&lt;/p&gt;
+
+&lt;p&gt;Tumblr has no problem with Disqus, and as I started to play with it more I
+discovered more and more references to it in the settings panels of other services that I used,
+such as Meetup.&lt;/p&gt;
+
+&lt;p&gt;But in the end it was ironically Tumblr’s biggest advantage for me that led to my &lt;em&gt;not&lt;/em&gt;
+using Tumblr.&lt;/p&gt;
+
+&lt;h2 id=&quot;markdown&quot;&gt;Markdown&lt;/h2&gt;
+
+&lt;p&gt;If your blog mainly includes articles that contain code snippets
+and embedded screenshots then writing directly in HTML is laborious. Using any of
+the inline editors that blogging platforms invariably provide doesn’t really help
+either since it involves way too many mouse-clicks (and often the HTML that is
+generated is a mess). So in this area Tumblr’s biggest plus – at least for me –
+is that it supports the use of &lt;a href=&quot;http://daringfireball.net/projects/markdown/&quot;&gt;Markdown&lt;/a&gt; to enter articles.&lt;/p&gt;
+
+&lt;p&gt;But once I started thinking about my preference for Markdown, and started to think
+about the kinds of blog-posts I wrote, I realised that being able to control how
+code snippets and screenshots appear was pretty much the &lt;em&gt;most important&lt;/em&gt; thing
+that I needed. And the best tool I’d found for that was &lt;a href=&quot;http://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt;, the static site
+generator.&lt;/p&gt;
+
+&lt;h2 id=&quot;static-site-generation&quot;&gt;Static Site Generation&lt;/h2&gt;
+
+&lt;p&gt;Whilst spending time with Tumblr and Posterous I was also toying with the idea
+of using a static site generator. If you’re not familiar with it, the idea is
+simply to generate a set of static HTML pages from your posts, and then to deploy
+those pages to a simple web server. Since they are static the pages are delivered
+very quickly, with little to go wrong. And because they are static, deployment
+can be as simple as using GitHub Pages or an S3 folder.&lt;/p&gt;
+
+&lt;p&gt;Each time I have considered the idea in the past I have rejected it, primarily
+because the publishing process generally requires you to be able to have access to your
+development machine. But then you
+start to wonder whether you would actually ever use any of the additional methods
+that Blogger, Tumblr and Posterous support
+for getting your posts online; would
+I really blog from my phone whilst out with the kids in the park, or during a meal at
+a restaurant with friends? And if I did, would I send that post to the same blog that I
+use for discussing test-driven development and big data? It was starting to dawn on
+me that with all the other benefits that I would get from having a static site,
+I could live with only being able to deploy from my main work computer.&lt;/p&gt;
+
+&lt;h3 id=&quot;jekyll-v-hyde&quot;&gt;Jekyll v. Hyde&lt;/h3&gt;
+
+&lt;p&gt;Of course given the tortuous tour I’d had through the world of blogging platforms, it was
+a certaintly that choosing a site generator was not going to be easy either.
+Jekyll is great, but it’s written in Ruby and I now do everything in Python.
+I’ve done a little Ruby in the course of constructing Chef scripts but I prefer to
+focus on as few languages as I can, so the search was on for a Python equivalent
+to Jekyll, which is how I came across &lt;a href=&quot;http://hyde.github.com/&quot;&gt;Hyde&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;octopress&quot;&gt;Octopress&lt;/h3&gt;
+
+&lt;p&gt;However, at the same time that I found Hyde I also came across &lt;a href=&quot;http://octopress.org/&quot;&gt;Octopress&lt;/a&gt;, a framework
+that sits around Jekyll sporting a nice theme and many interesting plug-ins. With
+Octopress it’s not only possible to insert code snippets with language-specific
+formatting, but it’s also possible to insert files from your local drive, snippets from gist,
+excerpts from other posts, and so on. In other words, when it comes to creating a blog about
+coding, Octporess makes it very easy to manage all the material you need, and to present it
+nicely.&lt;/p&gt;
+
+&lt;p&gt;Hyde is great too, but more effort has been put into making the framework easy
+to extend, whilst Octopress has seen a lot more effort directed at giving the resulting
+site a great, clean, look. Of course, if I ever wanted to add my own plug-ins I’d
+prefer to be with Hyde, but for now I’m going to treat Octopress as a standalone
+tool that produces nice looking technical sites, and ignore the Python/Ruby issue.&lt;/p&gt;
+
+&lt;p&gt;My suspicion is that I haven’t finished with blogging platforms just yet, but with
+my posts stored as Markdown and any comments to the site stored in Disqus – not
+to mention other assets such as images and presentations stored in
+Flickr, Skitch, S3, YouTube, SlideShare, &lt;em&gt;et. al.&lt;/em&gt; – I think I’m travelling about
+as light as I can and should be able to switch pretty easily if something else
+looks better.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;As services become increasingly specialised it doesn’t make sense to manage your
+own – far better to spend time in the areas where you can add value. Modern
+blogging platforms make it very easy to create a site that is as good
+as anything you could create on your own managed platform.&lt;/p&gt;
+
+&lt;p&gt;However, it’s still
+important to think about how easy it would be to shift platforms should the need
+arise, and for this reason it’s important to place resources like comments, images and videos outside
+the blogging platform.&lt;/p&gt;
+
+&lt;p&gt;And if your blog is development-oriented then most of these online services won’t
+really offer the same control over the output of your site as a static site generator
+like Jekyll coupled with Octopress does.&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 24 Feb 2012 17:17:00 +0000</pubDate>
+        <link>http://markbirbeck.com/blogging/drupal/hyde/jekyll/octopress/static%20site%20generation/2012/02/24/choosing-a-blogging-platform.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/blogging/drupal/hyde/jekyll/octopress/static%20site%20generation/2012/02/24/choosing-a-blogging-platform.html</guid>
+        
+        
+        <category>blogging</category>
+        
+        <category>drupal</category>
+        
+        <category>hyde</category>
         
         <category>jekyll</category>
         
-        <category>update</category>
+        <category>octopress</category>
+        
+        <category>static site generation</category>
+        
+      </item>
+    
+      <item>
+        <title>Dog bites man in race to Semantic Web</title>
+        <description>&lt;p&gt;Facebook’s adoption of RDFa as a way to provide extra features to its users has
+met with an ecstatic welcome by some, and suspicion and criticism by others.
+Here we discuss whether some in the semantic web community may be being too
+hard on their efforts.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;Ten years ago, did you expect there ever to be a semantic web?&lt;/p&gt;
+
+&lt;p&gt;How you answer that question will depend a lot on what you’ve been doing during
+that decade. If you don’t know what RDF or DARPA are, then my guess is that ten
+years ago you’d have been in the ‘Tim Berners-Lee is a dreamer’ camp.&lt;/p&gt;
+
+&lt;p&gt;If you &lt;em&gt;did&lt;/em&gt; know about RDF back then, you’d have rather quaintly been saying
+that all we need to do to get semantic web lift-off, is to persuade people to
+code their data up using RDF/XML. (As if people didn’t have lives to lead, or
+something.)&lt;/p&gt;
+
+&lt;p&gt;Fast forward to today, and ask the same question.&lt;/p&gt;
+
+&lt;p&gt;My guess is that today, many more people will answer that question positively,
+and agree that the semantic web is a viable proposition – perhaps even about
+to happen in the way that its visionaries had always hoped it would.&lt;/p&gt;
+
+&lt;p&gt;Of course, we didn’t get here in a smooth way, because that would imply that
+we knew all the answers in advance. We got where we are today – and by ‘we’
+I mean us, humans…everyone – by trying things that almost worked but didn’t
+quite, by meeting people from different disciplines and swapping ideas, by
+speaking, writing articles, creating code, doing PhDs in triple-store
+performance and inference, and generally experimenting. And we did all of
+these things (and more) because we knew instinctively that we could create a
+web that was even more powerful than the fantastical beast we already had.&lt;/p&gt;
+
+&lt;p&gt;As you’d expect, sometimes, some of us did the right thing for the wrong
+reasons. But that’s ok, because unless you think that there is something or
+someone out there keeping score, then ultimately, whatever the motivation, it
+all helps.&lt;/p&gt;
+
+&lt;h3 id=&quot;facebook&quot;&gt;Facebook&lt;/h3&gt;
+
+&lt;p&gt;So when I read Alex Iskold on how Facebook’s goal “is not to create a better,
+more structured Web” (&lt;a href=&quot;http://www.readwriteweb.com/archives/does_facebook_really_want_a_semantic_web.php&quot;&gt;Does Facebook Really Want a Semantic Web?&lt;/a&gt;), I
+couldn’t help but wonder what the story is. Actually, more than that, I’m
+asking myself exactly how do some of the very clever people who have contributed
+stirling work to the semantic web actually think that the &lt;em&gt;real&lt;/em&gt; semantic web
+(the one that everyone will use) is going to come about – other than in a
+messy, weaving, ‘one step forwards, two steps back’ kind of a way. (See also
+Ian Davis’ &lt;a href=&quot;http://blog.iandavis.com/2009/05/googles-rdfa-a-damp-squib&quot;&gt;Google’s RDFa a Damp Squib&lt;/a&gt; for the same take, almost exactly
+a year ago.)&lt;/p&gt;
+
+&lt;p&gt;This structured web is just a tool, a means to many ends. So it will &lt;em&gt;always&lt;/em&gt;
+be the case that anyone who uses it will be doing so for their own reasons, and
+&lt;em&gt;not&lt;/em&gt; “to create a better, more structured Web”. Selling products, marking up
+election results, identifying genomes, categorising research papers – rarely
+will these things be done with the primary goal of a “more structured web”, for
+its own sake, and we should be grateful for that.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-web-was-already-messy&quot;&gt;The web was already messy&lt;/h3&gt;
+
+&lt;p&gt;But purity of motivation aside, I think there are other problems with Alex’s
+article – if we’re going to tilt at windmills, we might want to establish
+who owns them first. For example, is it really Facebook’s fault that a “growing
+amount of user profile data is full of duplicates and ambiguity”, as Alex says?
+Can we really blame them that the “[a]bsence of semantics creates fragmented
+connections and noise around the Web”?&lt;/p&gt;
+
+&lt;p&gt;Don’t get me wrong, the people who know how to do the right thing should
+continue to do the right thing, and they should also be on hand to persuade
+the Facebooks of this world to do the right thing, too. (And the Googles and
+the Yahoo!s aswell, because they didn’t get it right first time, either.) But
+the semantic web community also needs to take a hard look at what it is asking
+people to do, and constantly look for opportunities to simplify its standards.&lt;/p&gt;
+
+&lt;h3 id=&quot;out-of-the-shadows&quot;&gt;Out of the shadows&lt;/h3&gt;
+
+&lt;p&gt;When Alex says that Facebook’s proposals were “targeted more towards PR than
+correctness” I have flashbacks to ten years ago when the mere mention of RDF
+would invoke derision (literally). I wonder what we would have thought back
+then, if someone had told us that some enormous companies with millions of
+users would be adopting semantic technologies, and trying to get good PR for
+it. We’d no doubt have dismissed that as a “man bites dog”, story.&lt;/p&gt;
+
+&lt;p&gt;Whatever their motivations, and regardless of whether they got it perfectly
+right or just pretty close, Facebook really are actively contributing to a
+“better, more structured Web”.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 05 Aug 2010 00:00:00 +0100</pubDate>
+        <link>http://markbirbeck.com/2010/08/05/dog-bites-man-in-race-to-semantic-web.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/2010/08/05/dog-bites-man-in-race-to-semantic-web.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Issue-driven development with Mercurial patch queues and Google Code</title>
+        <description>&lt;p&gt;&lt;em&gt;Note that since this post was written I’ve moved to Git and GitHub. However,
+I still use the same workflow.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;One of the things I like best about using Mercurial patch queues is the way
+that you can continually refine the commit message before you send anything
+back to your repository. Since the message won’t actually appear in your
+revision history until you convert the patch to a proper commit, you can hone
+the message as you work. This becomes particularly powerful when combined with
+Google Code’s ability to update issues based on your commit messages, and
+greatly assists with &lt;em&gt;issue-driven development&lt;/em&gt;.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;Let’s use a real scenario to illustrate.&lt;/p&gt;
+
+&lt;p&gt;I wanted to improve the performance of toggling the XForms &lt;code&gt;case&lt;/code&gt; element, in
+the XForms part of &lt;a href=&quot;http://backplanejs.googlecode.com/&quot;&gt;backplanejs&lt;/a&gt;. Given that I generally use an IDD approach,
+the first thing I did was to create an issue (&lt;a href=&quot;http://code.google.com/p/backplanejs/issues/detail?id=45&quot;&gt;issue 45: “Improve performance of case toggling”&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Over in Mercurial I then created a new patch. I gave it the name ‘issue-45’ and
+asked Mercurial to let me edit the commit message:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hg qnew issue-45 -e
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;My assigned editor opened and I entered the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Improve performance of case toggling.
+
+Fixes issue 45.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I tend to keep the first line of these commit messages fairly short, because it
+is used by Mercurial in various places, such as when you list your current
+patches with &lt;code&gt;hg qseries&lt;/code&gt;. But after that you can put whatever you like.&lt;/p&gt;
+
+&lt;p&gt;The “Fixes issue 45.” part is the interesting bit. When Google Code sees this
+message it will close issue 45 and automatically provide a link to the changeset
+in the issue’s comments. This message will then be added to the changeset, and
+the reference to ‘issue 45’ will become a link to the issue. (You can also add
+comments without closing the issue, generate a new issue, add labels, and so on.
+See &lt;a href=&quot;http://code.google.com/p/support/wiki/IssueTracker#Integration_with_version_control&quot;&gt;issue-tracker help&lt;/a&gt; for more information.)&lt;/p&gt;
+
+&lt;p&gt;None of these changes happen until we commit our code to the Google Code
+repository, which means we can work on our changes and the associated
+commit message until we’re happy.&lt;/p&gt;
+
+&lt;p&gt;As I worked on improving performance, it became clear that when we toggle the
+state of a form control from enabled to disabled, we should be a bit more
+efficient about how we manage changes to the CSS classes. The normal operation
+is to set the CSS to ‘enabled’ or ‘disabled’, but the code was first calling
+code to remove &lt;em&gt;both&lt;/em&gt; values, before then writing back whichever value
+represented the current state of the control.&lt;/p&gt;
+
+&lt;p&gt;Since there were actually two improvements I could make I raised issues 46 and
+47, with appropriate explanations. When I’d finished updating the code I did
+the usual ‘refresh’ to put the code in the patch, but I also told Mercurial
+that I wanted to update the commit message:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hg qrefresh -e
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;My editor opened and I was able to change the message to this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Improve performance of case toggling.
+
+Fixes issue 45.
+Fixes issue 46.
+Fixes issue 47.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After making the required changes, all that remained was to convert my patch
+into a proper commit in my repository:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hg qfinish -a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Of course Google Code still hasn’t seen these messages, and that requires a
+‘push’:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hg push
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This final action automatically closes all three issues for me, and adds
+cross-referencing messages to both the changeset and the issues.&lt;/p&gt;
+
+&lt;p&gt;You can see the result by looking at &lt;a href=&quot;http://code.google.com/p/backplanejs/issues/detail?id=45&quot;&gt;issue 45&lt;/a&gt; or &lt;a href=&quot;http://code.google.com/p/backplanejs/source/detail?r=d6ea4e794d&quot;&gt;revision d6ea4e794d&lt;/a&gt;.
+When used with the diff feature when looking at a changeset, this gives a
+detailed record of the changes that were made, and why – ideal for IDD.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 24 Apr 2010 00:00:00 +0100</pubDate>
+        <link>http://markbirbeck.com/development/2010/04/24/issue-driven-development-with-mercurial-patch-queues-and-google-code.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/development/2010/04/24/issue-driven-development-with-mercurial-patch-queues-and-google-code.html</guid>
+        
+        
+        <category>development</category>
+        
+      </item>
+    
+      <item>
+        <title>Vocabularies, token bundles and profiles in RDFa</title>
+        <description>&lt;p&gt;A number of discussions are taking place in the new &lt;a href=&quot;http://www.w3.org/2010/02/rdfa/&quot;&gt;W3C RDFa Working Group&lt;/a&gt;
+about how to enable authors to use tokens in place of URIs. How do we avoid
+conflicts if anyone can define their own tokens? This post looks at how this
+might be achieved.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;(The following discussion continues some of the themes from last year’s post
+&lt;a href=&quot;/blog/2009/04/30/tokenising-the-semantic-web&quot;&gt;Tokenising the Semantic Web&lt;/a&gt;.)&lt;/p&gt;
+
+&lt;h3 id=&quot;a-contract-between-consumer-and-publisher&quot;&gt;A contract between consumer and publisher&lt;/h3&gt;
+
+&lt;p&gt;The first thing to say is that what we are talking about is allowing publishers
+to establish a contract with the page consumer.&lt;/p&gt;
+
+&lt;p&gt;Looking at the vocabulary problem this way frees us from having to assume that
+some document will be downloaded to find out how to process everything – the
+so-called &lt;em&gt;follow your nose&lt;/em&gt; issue which I’ll come back to.&lt;/p&gt;
+
+&lt;p&gt;Instead, at the most fundamental level we simply want to allow Google (for example)
+to be able to say to authors, “if you use some previously agreed upon ‘switch’ in
+your documents, then we’ll interpret your RDFa in some agreed upon way”.&lt;/p&gt;
+
+&lt;p&gt;I begin with this because it establishes that we are looking for two things:
+primarily a way to identify a set of tokens (i.e., a way to provide that ‘switch’),
+and only secondarily are we looking for a way to set up retrievable tokens. I’m
+emphasising this because I feel in previous discussions there has been a tendency
+to look &lt;em&gt;only&lt;/em&gt; for a solution to the second issue – i.e., the ‘follow-your-nose’
+solution – and this has the tendency to prematurely eliminate simpler solutions
+form consideration.&lt;/p&gt;
+
+&lt;h3 id=&quot;profile&quot;&gt;&lt;code&gt;@profile&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;I’ve always favoured using the &lt;a href=&quot;http://www.w3.org/TR/html401/struct/global.html#profiles&quot;&gt;HTML 4.01 profile attribute&lt;/a&gt; for this contract,
+since it already exists, and its meaning in HTML 4.01 is very similar to what we
+need.&lt;/p&gt;
+
+&lt;p&gt;In particular, the HTML 4.01 spec says:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;User agents may use this URI in two ways:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;
+      &lt;p&gt;As a globally unique name. […]&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;p&gt;As a link. […]&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This is ideal, since it says that we &lt;em&gt;may&lt;/em&gt; do FYN, but we also might simply ‘know’
+intrinsically what to do. In other words, it gives us the opportunity to do both,
+which is crucial as we’ll see.&lt;/p&gt;
+
+&lt;p&gt;So what would a Google example look like, if we used &lt;code&gt;@profile&lt;/code&gt; as the ‘switch’?&lt;/p&gt;
+
+&lt;p&gt;Taking an example from the &lt;a href=&quot;http://www.google.com/support/webmasters/bin/answer.py?answer=146646&quot;&gt;Rich Snippets tutorial&lt;/a&gt;, it might look like this
+(note that the original sample uses &lt;code&gt;@property=&quot;url&quot;&lt;/code&gt;, rather than &lt;code&gt;@rel&lt;/code&gt; so I’ve
+retained that here):&lt;/p&gt;
+
+&lt;p&gt;``` html&lt;/p&gt;
+&lt;div typeof=&quot;Person&quot;&gt;
+    &lt;span property=&quot;name&quot;&gt;John Smith&lt;/span&gt;
+    &lt;span property=&quot;nickname&quot;&gt;Smithy&lt;/span&gt;
+    &lt;span property=&quot;url&quot;&gt;http://www.example.com&lt;/span&gt;
+    &lt;span property=&quot;affiliation&quot;&gt;ACME&lt;/span&gt;
+    &lt;span rel=&quot;address&quot;&gt;
+        &lt;span property=&quot;locality&quot;&gt;Albuquerque&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;span property=&quot;title&quot;&gt;Engineer&lt;/span&gt;
+    &lt;a href=&quot;http://darryl-blog.example.com/&quot; rel=&quot;friend&quot;&gt;Darryl&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Note that all I’ve done is to:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;make up a URI for a profile; of course the actual URI is up to Google, not me,
+but as you can see, for the sake of discussion, I’m pretending that there are
+different versions of a profile, and so I’ve built my imaginary URI accordingly;&lt;/li&gt;
+  &lt;li&gt;remove the namespace prefixes from the terms in @property and @rel. Of course
+a profile could do all sorts of mappings to get back to the desired URIs.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Now, when Google retrieve a document that has this profile defined, they can assume
+the contract I mentioned – they can assume that the publisher is writing this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;html
+@typeof=&quot;Person&quot;
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;as a shorthand for this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;html
+@typeof=&quot;http://rdf.data-vocabulary.org/#Person&quot;
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;omitting-profile&quot;&gt;Omitting &lt;code&gt;@profile&lt;/code&gt;&lt;/h4&gt;
+
+&lt;p&gt;It’s often asked in these discussions, ‘but what if the author doesn’t include the
+profile attribute…aren’t we left with unusable tokens?’ It’s a fair question,
+because after all the tokens now really don’t mean anything.&lt;/p&gt;
+
+&lt;p&gt;But from an RDFa standpoint it is no different to the situation when authors omit
+namespace declarations. Here’s the original rich snippets example, but without
+the &lt;code&gt;v&lt;/code&gt; prefix declaration:&lt;/p&gt;
+
+&lt;p&gt;``` html&lt;/p&gt;
+&lt;div typeof=&quot;v:Person&quot;&gt;
+    &lt;span property=&quot;v:name&quot;&gt;John Smith&lt;/span&gt;
+    &lt;span property=&quot;v:nickname&quot;&gt;Smithy&lt;/span&gt;
+    &lt;span property=&quot;v:url&quot;&gt;http://www.example.com&lt;/span&gt;
+    &lt;span property=&quot;v:affiliation&quot;&gt;ACME&lt;/span&gt;
+    &lt;span rel=&quot;v:address&quot;&gt;
+        &lt;span property=&quot;v:locality&quot;&gt;Albuquerque&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;span property=&quot;v:title&quot;&gt;Engineer&lt;/span&gt;
+    &lt;a href=&quot;http://darryl-blog.example.com/&quot; rel=&quot;friend&quot;&gt;Darryl&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;As you can see, it’s no more meaningful than our ‘missing profile’ example.&lt;/p&gt;
+
+&lt;h4 id=&quot;mixing-profiles&quot;&gt;Mixing profiles&lt;/h4&gt;
+
+&lt;p&gt;So, we’ve established that &lt;code&gt;@profile&lt;/code&gt; can be used as a ‘switch’ to enable a
+whole set of tokens, and all that an organisation needs to do is to explain
+clearly what mapping will take place between tokens and URIs, when that switch
+is used; as long as authors know how their data is going to be interpreted,
+then organisations like Google and Yahoo! can simply publish a profile URI and
+indicate what it means.&lt;/p&gt;
+
+&lt;p&gt;But what if our document-publisher adds another profile to their document?
+&lt;code&gt;@profile&lt;/code&gt; is defined in HTML 4.01 to be a space-separated list of values,
+so this is already legitimate, but what should happen when we get this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;html
+&amp;lt;body
+ xmlns:Person=&quot;http://rdf.data-vocabulary.org/#Person&quot;
+ xmlns:name=&quot;http://rdf.data-vocabulary.org/#name&quot;
+ .
+ .
+ .
+&amp;gt;
+    &amp;lt;!-- Some documentation about the profile here, to make it human readable. --&amp;gt;
+&amp;lt;/body&amp;gt;
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Making a profile into an HTML document gives us the possibility of profiles loading
+other profiles. For example, recall that I pretended that the 2010 version of this
+profile included the CC profile; this ‘import’ might be achieved as easily as this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;html
+&amp;lt;body
+ xmlns:Person=&quot;http://rdf.data-vocabulary.org/#Person&quot;
+ xmlns:name=&quot;http://rdf.data-vocabulary.org/#name&quot;
+ .
+ .
+ .
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;If profiles could import other profiles, it would also make versioning incredibly easy.
+For example, if our fictitious 2010 profile were to enhance the 2009 version by adding
+both the CC profile and a new predicate called ‘foo’, we could simply declare the 2010
+profile as including the 2009 profile, rather than expressing all of the tokens again:&lt;/p&gt;
+
+&lt;p&gt;``` html&lt;/p&gt;
+&lt;body xmlns:foo=&quot;http://rdf.data-vocabulary.org/#foo&quot;&gt;
+    &lt;!-- Some documentation about the profile here, to make it human readable. --&gt;
+&lt;/body&gt;
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;h4 id=&quot;json-profiles&quot;&gt;JSON profiles&lt;/h4&gt;
+
+&lt;p&gt;For various reasons I think the basic level of conformance for expressing token bundles
+should be to use JSON. Given that we are only concerned with name/value pairs, then all
+we need is this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;javascript
+{
+    &quot;Person&quot;: &quot;http://rdf.data-vocabulary.org/#Person&quot;,
+    &quot;name&quot;: &quot;http://rdf.data-vocabulary.org/#name&quot;,
+    .
+    .
+    .
+}
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;However, since the most common application of this will be to retrieve tokens in browsers,
+we should really use &lt;a href=&quot;http://en.wikipedia.org/wiki/JSON#JSONP&quot;&gt;JSONP&lt;/a&gt; so that the browser gets a chance to retrieve the data.
+Something like this would do it:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;javascript
+document.meta.addMappings({
+    &quot;Person&quot;: &quot;http://rdf.data-vocabulary.org/#Person&quot;,
+    &quot;name&quot;: &quot;http://rdf.data-vocabulary.org/#name&quot;,
+    .
+    .
+    .
+});
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This could easily be achieved by our theoretical parser calling out to a theoretical
+server with the following URL:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http://rdf.data-vocabulary.org/profile/2010.json?jsonp=document.meta.addMappings
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;handling-conflicts&quot;&gt;Handling conflicts&lt;/h3&gt;
+
+&lt;p&gt;If a generic parser is able to load token bundles from all quarters, then we now have
+a situation where the short-form tokens that authors are able to use can be ambiguous.&lt;/p&gt;
+
+&lt;p&gt;There are two issues here, one is to decide what should happen in a conflict situation,
+and the other is how to let authors know.&lt;/p&gt;
+
+&lt;h4 id=&quot;last-wins&quot;&gt;Last wins&lt;/h4&gt;
+
+&lt;p&gt;The first issue – what should happen when a conflict occurs – &lt;em&gt;could&lt;/em&gt; be resolved by
+saying that duplicate tokens are an error, but I think it’s obvious that this is the
+worst approach we could take. To avoid errors we’d need to establish central registries,
+and then we’d have immediately flipped from a decentralised solution to a centralised one.&lt;/p&gt;
+
+&lt;p&gt;It would be better to say that tokens are loaded in the order in which they appear in the
+document, and newer tokens simply override older ones.&lt;/p&gt;
+
+&lt;p&gt;Not only is this clear, but it would also allow for scenarios such as one organisation
+creating a profile that makes a small number of modifications to someone else’s profile,
+by overriding certain tokens. And it would also allow minor changes to be made to a
+profile without having to issue a whole new profile:&lt;/p&gt;
+
+&lt;p&gt;``` html&lt;/p&gt;
+&lt;div typeof=&quot;Person&quot;&gt;
+    &lt;span property=&quot;http://rdf.data-vocabulary.org/#name&quot;&gt;John Smith&lt;/span&gt;
+    &lt;span property=&quot;nickname&quot;&gt;Smithy&lt;/span&gt;
+    .
+    .
+    .
+&lt;/div&gt;
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;The author could of course reverse the order of the &lt;code&gt;@profile&lt;/code&gt; URIs, but this might start
+getting a little difficult to keep track of whilst editing.&lt;/p&gt;
+
+&lt;p&gt;A better solution is to make use of ‘@profile everywhere’, and to scope the token bundle.
+An author can then place their &lt;code&gt;@profile&lt;/code&gt; declaration closer to the mark-up that it relates
+to. In the following example we have the FOAF profile as our default throughout the document,
+but when we insert a Google-specific notion of a &lt;code&gt;Person&lt;/code&gt; we also put the profile identifier
+on the root element:&lt;/p&gt;
+
+&lt;p&gt;``` html&lt;/p&gt;
+&lt;div typeof=&quot;Person&quot; profile=&quot;http://rdf.data-vocabulary.org/profile/2009&quot;&gt;
+    &lt;span property=&quot;name&quot;&gt;John Smith&lt;/span&gt;
+    &lt;span property=&quot;nickname&quot;&gt;Smithy&lt;/span&gt;
+    .
+    .
+    .
+&lt;/div&gt;
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Now it’s very clear what is going on, since we’ve already said that ‘last wins’.&lt;/p&gt;
+
+&lt;p&gt;Another scenario is the reverse of the one we’ve just seen; the author actually wants to use
+the FOAF property inside &lt;em&gt;this&lt;/em&gt; mark-up. To achieve this they could once again use &lt;code&gt;@profile&lt;/code&gt;
+on the element to override the previously set profile:&lt;/p&gt;
+
+&lt;p&gt;``` html&lt;/p&gt;
+&lt;div typeof=&quot;Person&quot; profile=&quot;http://rdf.data-vocabulary.org/profile/2009&quot;&gt;
+    &lt;span property=&quot;name&quot; profile=&quot;http://xmlns.com/foaf/0.1/profile&quot;&gt;John Smith&lt;/span&gt;
+    .
+    .
+    .
+&lt;/div&gt;
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Alternatively, they could spell out the URI in full, as we saw before. But another interesting
+approach is to use another token, and there are a couple of ways this could be done.&lt;/p&gt;
+
+&lt;p&gt;One way would be for authors to simply define their own token in the document. In this example
+the author creates &lt;code&gt;foaf-name&lt;/code&gt; to distinguish it from &lt;code&gt;name&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;``` html&lt;/p&gt;
+&lt;div typeof=&quot;Person&quot; profile=&quot;http://rdf.data-vocabulary.org/profile/2009&quot;&gt;
+    &lt;span property=&quot;foaf-name&quot;&gt;John Smith&lt;/span&gt;
+    .
+    .
+    .
+&lt;/div&gt;
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;However, a better way would be for the profile’s authors to have included a suitable prefix in
+the profile itself. For example, Google’s profile might look like this (note the declaration of
+&lt;code&gt;v&lt;/code&gt;):&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;html
+&amp;lt;body
+ xmlns:Person=&quot;http://rdf.data-vocabulary.org/#Person&quot;
+ xmlns:name=&quot;http://rdf.data-vocabulary.org/#name&quot;
+ .
+ .
+ .
+&amp;gt;
+    &amp;lt;!-- Some documentation about the profile here, to make it human readable. --&amp;gt;
+&amp;lt;/body&amp;gt;
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now not only are &lt;code&gt;Person&lt;/code&gt; and &lt;code&gt;name&lt;/code&gt; available to authors who use this profile, but so is &lt;code&gt;v&lt;/code&gt;.
+This means that authors can use &lt;code&gt;v:Person&lt;/code&gt; if they ever need to be clear about what they are
+doing.&lt;/p&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;profile&lt;/code&gt; attribute is an obvious way to allow data publishers and data consumers to agree
+on what is being published. It is sufficiently open to allow it to be used in both RDFa and
+Microformats, but its definition also leaves open a way to implement ‘follow your nose’ token
+retrieval.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 25 Feb 2010 00:00:00 +0000</pubDate>
+        <link>http://markbirbeck.com/thought/rdfa/2010/02/25/vocabularies-token-bundles-and-profiles-in-rdfa.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/thought/rdfa/2010/02/25/vocabularies-token-bundles-and-profiles-in-rdfa.html</guid>
+        
+        
+        <category>thought</category>
+        
+        <category>rdfa</category>
+        
+      </item>
+    
+      <item>
+        <title>Treating URIs as strings considered dangerous</title>
+        <description>&lt;p&gt;Since URIs are often conveyed as strings it’s tempting to manipulate them as
+such, but it’s better–and safer–to delegate URI manipulation to special
+functions. These can then have their own unit-tests, which will take into
+account the edge-cases that can catch us out.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;I’ve just been doing a quick code review in the Ubiquity XForms project, and
+one thing caught my eye that I thought might be worth a post.&lt;/p&gt;
+
+&lt;h2 id=&quot;forms-submission&quot;&gt;Forms submission&lt;/h2&gt;
+
+&lt;p&gt;In forms submission – both in XForms and HTML forms – we often need to add
+parameters to a URI.&lt;/p&gt;
+
+&lt;p&gt;For example, if we have the URI &lt;code&gt;http://example.org&lt;/code&gt;, and the parameters &lt;code&gt;a=b&lt;/code&gt;
+and &lt;code&gt;c=d&lt;/code&gt;, then the resulting URI should be:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?a=b&amp;amp;c;=d&lt;/p&gt;
+
+&lt;p&gt;It seems pretty straightforward that we need to add the parameters to the URI,
+with a ‘?’ in between:&lt;/p&gt;
+
+&lt;p&gt;[uri] + ‘?’ + [parameters]&lt;/p&gt;
+
+&lt;h2 id=&quot;adding-parameters&quot;&gt;Adding parameters&lt;/h2&gt;
+
+&lt;p&gt;We can see that the parameters themselves have been added by taking the name
+and value (&lt;code&gt;a=b&lt;/code&gt;, etc.), and adding it to the URI, ensuring that for all
+parameters other than the first, there is a separator between. (The separator
+can be either an ‘&amp;amp;’ or a ‘;’.)&lt;/p&gt;
+
+&lt;h2 id=&quot;base-uris-already-containing-parameters&quot;&gt;Base URIs already containing parameters&lt;/h2&gt;
+
+&lt;p&gt;The bug that needed fixing though, was that this ‘naive’ concatenation doesn’t
+work if the URI you are dealing with already contains parameters.&lt;/p&gt;
+
+&lt;p&gt;For example, if we have the URI &lt;code&gt;http://example.org?x=y&lt;/code&gt;, and we need to add
+the same two parameters we had before, then our simple concatenation would
+give us:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?x=y?a=b&amp;amp;c;=d&lt;/p&gt;
+
+&lt;p&gt;when what we actually need is:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?x=y&amp;amp;a;=b&amp;amp;c;=d&lt;/p&gt;
+
+&lt;p&gt;As you can see, if we already have a ‘?’ then we don’t need to add another, so
+it seems that a simple addition to our concatenation code would be to use a
+call to &lt;code&gt;indexOf&lt;/code&gt; to see if there is a ‘?’ present, and only add another if we
+don’t find one.&lt;/p&gt;
+
+&lt;p&gt;There’s a small additional test we’ll need to make which is to check whether
+the last character in the URI is a ‘?’, as I’ll explain.&lt;/p&gt;
+
+&lt;h2 id=&quot;base-uris-with-empty-query-strings&quot;&gt;Base URIs with empty query strings&lt;/h2&gt;
+
+&lt;p&gt;Recall that we added the parameters by placing &lt;code&gt;a=b&lt;/code&gt; and &lt;code&gt;c=d&lt;/code&gt; onto the end of
+the URI, separated by ‘&amp;amp;’:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?a=b&amp;amp;c;=d&lt;/p&gt;
+
+&lt;p&gt;Now, if we already have a URI with a query then we need to ensure that there
+is an additional ‘&amp;amp;’ placed before our first parameter:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?x=y&amp;amp;a;=b&amp;amp;c;=d&lt;/p&gt;
+
+&lt;p&gt;But what if the base URI has a query indicator (i.e., the ‘?’) but no
+parameters? In other words, what if we have this URI:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?&lt;/p&gt;
+
+&lt;p&gt;In this situation we &lt;em&gt;don’t&lt;/em&gt; want to add the extra separator, otherwise we’ll
+get this:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?&amp;amp;a;=b&amp;amp;c;=d&lt;/p&gt;
+
+&lt;p&gt;So our rules now become that we only want to precede our parameters with a
+separator if the ‘?’ is not the last character in the URI. It’s a little
+awkward, but thanks to &lt;code&gt;lastIndexOf&lt;/code&gt;, I’m sure we can manage.&lt;/p&gt;
+
+&lt;h2 id=&quot;base-uris-already-containing-fragments&quot;&gt;Base URIs already containing fragments&lt;/h2&gt;
+
+&lt;p&gt;However, there’s a further subtlety; what if the URI contains a fragment
+identifier?&lt;/p&gt;
+
+&lt;p&gt;For example, if we have the URI &lt;code&gt;http://example.org#x&lt;/code&gt;, and we need to add the
+same two parameters we had before, then our simple concatenation would give us
+this:&lt;/p&gt;
+
+&lt;p&gt;http://example.org#x?a=b&amp;amp;c;=d&lt;/p&gt;
+
+&lt;p&gt;The fragment identifier part of the URI has now become &lt;code&gt;x?a=b&amp;amp;c;=d&lt;/code&gt; because
+it’s always the last part of the URI. What we actually want is to insert the
+new parameters &lt;em&gt;before&lt;/em&gt; the ‘#’:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?a=b&amp;amp;c;=d#x&lt;/p&gt;
+
+&lt;p&gt;Now we need to add another use of &lt;code&gt;indexOf&lt;/code&gt; to check for a ‘#’, and if we find
+one, use its position as the point at which to insert the parameters.&lt;/p&gt;
+
+&lt;h2 id=&quot;context-is-everything&quot;&gt;Context is everything&lt;/h2&gt;
+
+&lt;p&gt;However, the assumption behind using &lt;code&gt;indexOf&lt;/code&gt; and &lt;code&gt;lastIndexOf&lt;/code&gt; in this way
+is that a URI will contain only one ‘?’. A secondary assumption here is that
+the only time you’ll ever see a ‘? is as an indicator of the query part of the
+URI.&lt;/p&gt;
+
+&lt;p&gt;Both of these assumptions are incorrect.&lt;/p&gt;
+
+&lt;h3 id=&quot;question-marks-in-parameters&quot;&gt;Question marks in parameters&lt;/h3&gt;
+
+&lt;p&gt;The first assumption is that you can only have one ‘?’ in a URI. However, &lt;a href=&quot;http://labs.apache.org/webarch/uri/rfc/rfc3986.html#query&quot;&gt;the
+query section of RFC
+3986&lt;/a&gt; explicitly
+flags up that the ‘?’ character is a valid parameter value. For example, we
+can have &lt;code&gt;a=finished?&lt;/code&gt; as a parameter.&lt;/p&gt;
+
+&lt;p&gt;This means it’s quite easy to envisage scenarios where there is more than one
+‘?’ in the URI:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?a=finished?&amp;amp;c;=d&lt;/p&gt;
+
+&lt;p&gt;This won’t necessarily mess up our first use of &lt;code&gt;indexOf&lt;/code&gt;, but it will mess up
+the use of &lt;code&gt;lastIndexOf&lt;/code&gt; as a way to check whether you need to add an extra
+separator. Recall that we wanted to avoid turning this:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?&lt;/p&gt;
+
+&lt;p&gt;into this:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?&amp;amp;a;=b&amp;amp;c;=d&lt;/p&gt;
+
+&lt;p&gt;so we used &lt;code&gt;lastIndexOf&lt;/code&gt; to check whether the last character in the URI was a
+‘?’. But that algorithm will turn this:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?a=finished?&lt;/p&gt;
+
+&lt;p&gt;into this:&lt;/p&gt;
+
+&lt;p&gt;http://example.org?a=finished?c=d&lt;/p&gt;
+
+&lt;p&gt;You might need to look closely to spot it, but because the last character was
+a ‘?’, we haven’t added a separator before the &lt;code&gt;c&lt;/code&gt;, and as a result, instead
+of having two parameters (&lt;code&gt;a=finished?&lt;/code&gt; and &lt;code&gt;c=d&lt;/code&gt;) we have only one
+(&lt;code&gt;a=finished?c=d&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;question-marks-in-fragments&quot;&gt;Question marks in fragments&lt;/h3&gt;
+
+&lt;p&gt;The interesting thing about the previous examples is that at least you know
+you have a query string, so you might be tempted to still use &lt;code&gt;indexOf&lt;/code&gt; to
+manipulate things. After all, although we may have too many ‘?’ characters, we
+still know that we have query.&lt;/p&gt;
+
+&lt;p&gt;However, with the &lt;a href=&quot;http://labs.apache.org/webarch/uri/rfc/rfc3986.html#fragment&quot;&gt;the fragment section of RFC
+3986&lt;/a&gt; all bets
+are off; here we can see that ‘?’ is explicitly allowed as a fragment
+character.&lt;/p&gt;
+
+&lt;p&gt;This means that it’s possible to have a ‘?’ in a URI &lt;em&gt;even if it doesn’t have
+a query&lt;/em&gt;. For example:&lt;/p&gt;
+
+&lt;p&gt;http://example.org#finished?&lt;/p&gt;
+
+&lt;p&gt;This may seem like a contrived example, but actually it’s not, for two
+reasons.&lt;/p&gt;
+
+&lt;p&gt;The first is that the fragment part of a URI is carefully defined to allow
+anything, because we don’t know how it will be interpreted. You may think that
+“finished?” is not valid as an HTTP fragment, but what about in the scheme
+“xyz”?&lt;/p&gt;
+
+&lt;p&gt;And this is the key point; since HTML forms and XForms can ultimately deal
+with any scheme, since that’s how the web is designed, we must write our
+algorithms defensively, and not assume anything.&lt;/p&gt;
+
+&lt;h2 id=&quot;safe-uri-handling&quot;&gt;Safe URI handling&lt;/h2&gt;
+
+&lt;p&gt;Hopefully this delving into some of the subtleties of URI handling and parsing
+–and we haven’t even begun to talk about turning relative paths into absolute
+paths, handling encoded characters, and so on– has done enough to convince
+you that you shouldn’t manipulate URIs directly, as simple strings.&lt;/p&gt;
+
+&lt;p&gt;The only way to be completely sure of what is happening is to use special
+functions to unpack a URI into its various components, then manipulate those
+components–perhaps adding additional parameters to the list of query
+parameters, but it might also be to turn a relative path into an absolute path
+–before finally reassembling the URI.&lt;/p&gt;
+
+&lt;p&gt;This may sound like a lot of work, but it’s the only way to be sure that
+characters don’t get incorrectly interpreted as a consequence of their
+position in the URI not being taken into account.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;a href=&quot;http://backplanejs.googlecode.com/&quot;&gt;backplanejs library&lt;/a&gt; these
+functions are in the URI module. (This is also imported into the &lt;a href=&quot;http://ubiquity-xforms.googlecode.com/&quot;&gt;Ubiquity
+XForms library&lt;/a&gt;.) Breaking up a URI
+simply involves calling &lt;code&gt;spliturl&lt;/code&gt;, which returns an object containing all of
+the parts. For example:&lt;/p&gt;
+
+&lt;p&gt;spliturl( “http://example.org?a=finished?” )&lt;/p&gt;
+
+&lt;p&gt;would give us the object:&lt;/p&gt;
+
+&lt;p&gt;{&lt;/p&gt;
+
+&lt;p&gt;scheme: “http:,&lt;/p&gt;
+
+&lt;p&gt;authority: “example.org”,&lt;/p&gt;
+
+&lt;p&gt;path: “”&lt;/p&gt;
+
+&lt;p&gt;query: “a=finished?”&lt;/p&gt;
+
+&lt;p&gt;fragment: “”&lt;/p&gt;
+
+&lt;p&gt;}&lt;/p&gt;
+
+&lt;p&gt;It’s then an easy matter to manipulate the query part, before creating a new
+URI with the &lt;code&gt;recomposeURI&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Since URIs are often conveyed as strings then it’s tempting to manipulate them
+as such. But the problem with doing this means that the context of a character
+is rarely taken into account when processing.&lt;/p&gt;
+
+&lt;p&gt;It’s better–and safer–to delegate URI manipulation to special functions.
+These can then have their own unit-tests, which will take into account the
+edge-cases that can catch us out.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 18 Jan 2010 00:00:00 +0000</pubDate>
+        <link>http://markbirbeck.com/xforms/mark%20birbeck/thought%20piece/2010/01/18/treating-uris-as-strings-considered.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/xforms/mark%20birbeck/thought%20piece/2010/01/18/treating-uris-as-strings-considered.html</guid>
+        
+        
+        <category>xforms</category>
+        
+        <category>mark birbeck</category>
+        
+        <category>thought piece</category>
+        
+      </item>
+    
+      <item>
+        <title>The Joys of Mercurial</title>
+        <description>&lt;p&gt;No-one needs to be told that any project you work on needs a version-control
+system. Nowadays, even when writing documents or OWL ontologies, I’ll use
+source control, and if it’s something that can be shared with others, then I
+might even start up a new Google Code project, so that I have a wiki and
+issue-tracking, too.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;Up until a few months ago, my VCS of choice was SVN, and it served us well.
+But more recently I decided to give a distributed version-control system a
+try, and to my surprise found not only something that could track my work, but
+something that facilitated a new way of working.&lt;/p&gt;
+
+&lt;h2 id=&quot;choosing-a-dvcs&quot;&gt;Choosing a DVCS&lt;/h2&gt;
+
+&lt;p&gt;The two main contenders seemed to be Mercurial and Git, although there are
+definitely others. As far as I can tell, Git is the more advanced of the two,
+and I was about to start using it when I discovered that Google Code supported
+Mercurial. Since the differences between the two are not that great, and since
+I’ve always been of the opinion that time spent trying to choose the ‘best’ is
+would be better spent getting on and learning, I plumped for Mercurial.&lt;/p&gt;
+
+&lt;p&gt;But I’d like to stress that even if Git and Mercurial were worlds apart, it
+wouldn’t make much difference, because the significant difference between
+these two and SVN is that it makes for a completely difference workflow.&lt;/p&gt;
+
+&lt;h2 id=&quot;source-control-as-backup-and-the-problem-of-code-reviews&quot;&gt;Source-control as backup, and the problem of code reviews&lt;/h2&gt;
+
+&lt;p&gt;For many years I’ve seen VCS as essentially a kind of ‘back up’. It’s a way of
+storing the code that matches a particular release of your software, so that
+you can go back to it if a customer spots a bug. It’s also a central location
+that is authoritative for your code-base.&lt;/p&gt;
+
+&lt;p&gt;But over the last year or so, I’ve found that this model doesn’t really help
+when it comes to managing code that is contributed to a project. If you allow
+many programmers to commit to the project, then the history becomes a mish-
+mash of comments about fixed bugs, branches, code reviews, and so on.&lt;/p&gt;
+
+&lt;p&gt;For example, a common problem is that inexperienced programmers will commit
+too much code at a time, for review. Contributions will invariably include a
+mixture of basic tidying up – such as switching tabs and spaces, removing
+erroneous comments, or ensuring that code conforms to a house style – some
+bug fixes that were spotted ‘whilst I was there’, and then of course the
+proper fix itself.&lt;/p&gt;
+
+&lt;p&gt;Of course, more experienced programmers will split these elements into
+separate commits, so that reviewers can focus on just what has changed. But
+with a tool like SVN, this is actually quite difficult to manage.&lt;/p&gt;
+
+&lt;p&gt;For example, imagine that you start work on fixing issue 123. You add your
+tests, add some code, and things are going quite well. You discover some old
+comments that are no longer relevant, and delete them. You see that some of
+the code doesn’t conform to the house-style, and you fix that. And then as
+often happens, you realise that to fix issue 123, you actually need to add
+support for something else that no-one had thought of before; you dive into
+that, and add your tests.&lt;/p&gt;
+
+&lt;p&gt;Ideally you should submit code for two reviews now; the whitespace and coding
+style changes can usually go straight into trunk, but the new feature and the
+fix for issue 123 should be submitted for review.&lt;/p&gt;
+
+&lt;p&gt;But how to separate them?&lt;/p&gt;
+
+&lt;h2 id=&quot;mercurial-as-a-patch-manager&quot;&gt;Mercurial as a patch-manager&lt;/h2&gt;
+
+&lt;p&gt;The answer is of course, creating a set of patches, and getting those
+reviewed, but although ‘mastering patches’ has been on my long list of things
+to do for quite a while now, I’d never quite got round to it.&lt;/p&gt;
+
+&lt;p&gt;So it came as quite a surprise to discover that a key feature of Mercurial is
+its ability to manage patches – this moves version control out of the
+category of a backup system, and into a crucial part of the programmer’s
+toolbox. Programmers can now ‘craft’ their patches for submission, grouping
+different pieces of work together in one patch, and then submitting them for
+review. Rather than fighting against the VCS, the system helps them to get
+their code ready.&lt;/p&gt;
+
+&lt;p&gt;In Mercurial for example, I can use &lt;code&gt;hg qrecord&lt;/code&gt; to interactively create three
+patches from the mixture of changes that I described a moment ago. Or if the
+changes are in separate files, I can create patches that only contain certain
+files, by using the &lt;code&gt;-X&lt;/code&gt; and &lt;code&gt;-I&lt;/code&gt; options on &lt;code&gt;hg qnew&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;But once you know what you are doing with patches, it really becomes even
+easier, as I’ll illustrate.&lt;/p&gt;
+
+&lt;p&gt;My favourite way to work now is to create a basic housekeeping patch at the
+beginning:&lt;/p&gt;
+
+&lt;p&gt;hg qnew housekeeping&lt;/p&gt;
+
+&lt;p&gt;Then I create a patch for the code I want to work on:&lt;/p&gt;
+
+&lt;p&gt;hg qnew issue-123 -m “Fix issue 123.”&lt;/p&gt;
+
+&lt;p&gt;We work away on our changes to the code, adding our tests and so on, and then
+when we want to save those changes to our patch, we simply use the &lt;code&gt;qrefresh&lt;/code&gt;
+command:&lt;/p&gt;
+
+&lt;p&gt;hg qrefresh&lt;/p&gt;
+
+&lt;p&gt;Then we spot some whitespace issues, and perhaps a few unused variables.
+Rather than making the changes there and then, we ‘unapply’ our current patch
+– the one that contains all of the changes to fix issue 123 – by using the
+&lt;code&gt;qpop&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;p&gt;hg qpop&lt;/p&gt;
+
+&lt;p&gt;Our entire working directory is now back to where it was when we created the
+‘housekeeping’ patch, but all of our changes for ‘issue-123’ are safely stored
+in a patch, waiting to be reapplied. And any changes that we make now, by
+using the &lt;code&gt;qrefresh&lt;/code&gt; command, will automatically be placed into the
+‘housekeeping’ patch, rather than the ‘issue-123’ patch. As you can see
+Mercurial is helping us manage our patches, as we try to get them ready for
+code review.&lt;/p&gt;
+
+&lt;p&gt;Once we’ve made our housekeeping changes, we can reapply our ‘issue-123’
+patch, by using the &lt;code&gt;qpush&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;p&gt;hg qpush&lt;/p&gt;
+
+&lt;p&gt;The working directory now reflects all of the changes that we had been working
+on before.&lt;/p&gt;
+
+&lt;p&gt;A slightly more complicated scenario arises when we realise that the work we
+are doing should really be a separate piece of work. The easiest scenario is
+when we’ve added a file or two, but realise it’s not really about ‘issue-123’,
+but&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 18 Dec 2009 00:00:00 +0000</pubDate>
+        <link>http://markbirbeck.com/2009/12/18/joys-of-mercurial.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/2009/12/18/joys-of-mercurial.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>RDFa and SEO</title>
+        <description>&lt;p&gt;I did a couple of talks at SemTech 2009 this year, and although I managed to
+upload my talk on &lt;a href=&quot;/blog/2009/06/slides-for-semtech2009-talk-on-rdfa&quot;&gt;RDFa: The Semantic Web’s Missing Link&lt;/a&gt;,
+I never got round to uploading the slides for a panel discussion I was involved
+in, called &lt;a href=&quot;http://semtech2009.com/session/2049/&quot;&gt;A Shift in SEO&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;I was reminded of this omission earlier this week, when a discussion around
+RDFa and SEO started to take off, fuelled largely by the energetic Martin Hepp
+(see &lt;a href=&quot;http://www.slideshare.net/mhepp/goodrelations-rdfa-for-deep-comparison-shopping-on-a-web-scale&quot;&gt;GoodRelations &amp;amp; RDFa for Deep Comparison Shopping on a Web Scale&lt;/a&gt;
+and &lt;a href=&quot;http://www.seroundtable.com/archives/021266.html&quot;&gt;Developments in Information Retrieval on the Web&lt;/a&gt; from SES Chicago ‘09).&lt;/p&gt;
+
+&lt;p&gt;Since I made some points in the panel discussion that complement some of those
+that are being made now, I thought ‘better late than never’, and &lt;a href=&quot;http://www.slideshare.net/mark.birbeck/rdfa-in-seo&quot;&gt;uploaded the slides&lt;/a&gt;. (Especially since
+it was quite smart of the conference organisers to place an SEO session into
+the middle of a semantic technology conference.)&lt;/p&gt;
+
+&lt;p&gt;My comments in the session looked at:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;how RDFa can help to improve the display of search results;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;how it can also be used to improve the accuracy of those results;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;and consequently, how RDFa could help to create a series of vertical search engines.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;improving-display-of-results&quot;&gt;Improving display of results&lt;/h2&gt;
+
+&lt;p&gt;This is the area that has probably seen most discussion recently, in the
+context of Yahoo!’s enhanced results, and Google’s rich snippets. Both
+techniques improve the display of search results by bringing to the fore
+information that is specific to the item being displayed. For example, if the
+search result is a film, then the kind of information that should be
+emphasised would be whether reviewers liked the film or not, the running time,
+its rating (i.e., whether it’s suitable for children, or not), which cinemas
+are showing the film near you, and so on.&lt;/p&gt;
+
+&lt;p&gt;The benefits to the search engine of doing this, are that users can get more
+done, on their site, making them more likely to return. The benefits for the
+companies providing the data are improved click-through.&lt;/p&gt;
+
+&lt;p&gt;This last point is worth stressing, since many people on the outside of SEO
+assume that it’s all about trying to get a particular web-site to appear as
+high in the listings as possible, but for many sites, click-through is
+probably more important than ranking. Some SEO experts at the conference were
+saying that even if adding RDFa to a site gave an improvement in click-through
+of only a couple of percent, sites would see that as worth the effort – yet
+as Peter Mika said in &lt;a href=&quot;http://www.semantic-conference.com/session/1723/&quot;&gt;Year of the Monkey: Lessons from the first year of SearchMonkey&lt;/a&gt;,
+adding RDFa and Microformats to a page gives significantly better click-through
+than a mere few percent.&lt;/p&gt;
+
+&lt;p&gt;Hence the interest in Martin’s &lt;a href=&quot;http://purl.org/goodrelations/&quot;&gt;GoodRelations ontology&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;improved-search-accuracy&quot;&gt;Improved search accuracy&lt;/h2&gt;
+
+&lt;p&gt;Search accuracy is important in this, too. Obviously it’s beneficial for the
+users of search engines, in that it can help them to find the information they
+want, faster. But it’s also significant for site creators and SEO
+practitioners, because it means that sites are increasingly found in the right
+place.&lt;/p&gt;
+
+&lt;p&gt;Once again, this seems to be at odds with the general view of SEO, but an
+increasing part of the SEO job description is the writing of relevant articles
+on topics that relate to your products and services, as a way to bring people
+to your site. Since the search engines are increasingly clever enough to
+differentiate between a bunch of keywords dumped into a page, and an article
+with real content, a virtuous circle is created, rewarding ‘proper’ articles
+with improved rankings.&lt;/p&gt;
+
+&lt;p&gt;RDFa can help this further, because it allows authors to make their pages
+unambiguous. And if the search engines are rewarding accuracy of ordinary text
+pages, it makes sense that they’ll reward accuracy even more, if those pages
+contain RDFa.&lt;/p&gt;
+
+&lt;h2 id=&quot;vertical-search-engines&quot;&gt;Vertical search engines&lt;/h2&gt;
+
+&lt;p&gt;The final point I looked at was the way that RDFa will allow the search giants
+to offer partitioned search engines, aimed at particular audiences.&lt;/p&gt;
+
+&lt;p&gt;It’s true that there are many search engines already available, for specialist
+areas, but most of them tend to be out of date, or missing information
+altogether, and they often require bloggers to register their site for
+crawling.&lt;/p&gt;
+
+&lt;p&gt;The major search engines are often crawling these sites already anyway, but
+page ranking algorithms will hide them away in the 1000th page of your search
+results. By adding targeted mark-up to web-pages it becomes easier for search
+engines to differentiate the subject-matter of the pages, and so offer
+specialised views on their data.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;RDFa is already impacting search in positive ways, and SEO is adapting
+accordingly. But there is a great deal further that search and SEO can go
+towards being more ‘semantic’, and RDFa has a lot to offer in realising the
+potential.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 16 Dec 2009 00:00:00 +0000</pubDate>
+        <link>http://markbirbeck.com/presentation/rdfa/2009/12/16/rdfa-and-seo.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/presentation/rdfa/2009/12/16/rdfa-and-seo.html</guid>
+        
+        
+        <category>presentation</category>
+        
+        <category>rdfa</category>
+        
+      </item>
+    
+      <item>
+        <title>Linked Data and RDFa in US and UK government web-sites</title>
+        <description>&lt;p&gt;Two exciting pieces of RDFa news arrived within ten minutes of each other in
+my Twitter client. Both concerned governments making data open – one in the
+US, and the other in the UK.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;The first item was a reference by Steven Pemberton
+(&lt;a href=&quot;http://twitter.com/stevenpemberton&quot;&gt;@stevenpemberton&lt;/a&gt;) to &lt;a href=&quot;http://www.informationweek.com/news/government/info-management/showArticle.jhtml?articleID=221900361&quot;&gt;a story in
+Information Week&lt;/a&gt;,
+which explained that the new media team at the Whitehouse plan to use more
+RDFa in their pages. Scanned PDFs are no longer good enough, according to
+deputy director David Cole.&lt;/p&gt;
+
+&lt;p&gt;The second item came via Andrew Lewin (&lt;a href=&quot;http://twitter.com/draml&quot;&gt;@draml&lt;/a&gt;),
+and concerns the release by the COI of &lt;a href=&quot;http://coi.gov.uk/guidance.php?page=312&quot;&gt;guidance on how to mark-up vacancies and consultations&lt;/a&gt;
+with RDFa, which I’m pleased to say I helped to write.&lt;/p&gt;
+
+&lt;p&gt;This latter announcement is particularly exciting for RDFa, for a number of
+reasons.&lt;/p&gt;
+
+&lt;p&gt;First, it’s a real-world usage of the syntax; it’s not an announcement of
+something that someone, somewhere, hopes to do in the future – the vocabulary
+is there, servers are deployed, and this is a set of instructions to people
+who produce government web-sites on how they should mark up their pages if
+they want their data to be consumed.&lt;/p&gt;
+
+&lt;p&gt;Second, it’s exciting because the use of RDFa is extremely leading-edge. Of
+course it’s great to see people groking RDFa as a way to do things like
+improve search, but the COI realised long ago that RDFa could also be used as
+a mechanism to ease the publishing and centralisation of data. This is
+something that I think we can expect to see more of, in the coming year.&lt;/p&gt;
+
+&lt;p&gt;(A full description of the project can be found at &lt;a href=&quot;/blog/2009/04/23/more-rdfa-goodness-from-uk-government-web-sites&quot;&gt;More RDFa goodness from UK
+government web-sites&lt;/a&gt;.
+It’s also discussed in &lt;a href=&quot;/blog/2009/07/talking-with-mark-birbeck-about-rdfa-and-its-use-in-government&quot;&gt;Mark Birbeck interviewed by Paul Miller about RDFa&lt;/a&gt;.)&lt;/p&gt;
+
+&lt;p&gt;And finally, I find this announcement exciting because the guidelines document
+uses the term ‘Linked Data’ throughout. This reflects an extremely deep
+understanding of the implications of what COI are doing with RDFa; the COI do
+not simply explain to people how to publish vacancies and consultations to the
+web – they are describing how to publish that data &lt;em&gt;to the Linked Data
+cloud&lt;/em&gt;. The introduction is forthright on this:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Government is committed to making its public information and data as widely
+available as possible. The best way to make structured information available
+online is to publish it as Linked Data. Linked Data makes the information
+easier to cut and combine in ways that are relevant to citizens. This document
+describes how to put government consultations information into Linked Data.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        <pubDate>Fri, 20 Nov 2009 00:00:00 +0000</pubDate>
+        <link>http://markbirbeck.com/news/rdfa/2009/11/20/linked-data-and-rdfa-in-us-and-uk.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/news/rdfa/2009/11/20/linked-data-and-rdfa-in-us-and-uk.html</guid>
+        
+        
+        <category>news</category>
+        
+        <category>rdfa</category>
+        
+      </item>
+    
+      <item>
+        <title>Evangelising RDFa in Australia</title>
+        <description>&lt;p&gt;I was recently lucky enough to take my first trip to Australia. I was there to
+do two talks, the first on RDFa and its use in Government (given in Canberra,
+the home of the Australian government), and the second, a talk on RDFa and its
+impact on the web (given at the Web Directions South 2009 conference).&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;I’ve embedded the presentations below, although it’s probably better to view
+the presentations at SlideShare, so that you can see the speaker notes:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.slideshare.net/mark.birbeck/rdfa-and-
+government-data&quot;&gt;RDFa and Government Data&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;View more &lt;a href=&quot;http://www.slideshare.net/&quot;&gt;presentations&lt;/a&gt; from &lt;a href=&quot;http://www.slideshare.net/mark.birbeck&quot;&gt;Mark
+Birbeck&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.slideshare.net/mark.birbeck/rdfa-what-happens-when-pages-
+get-smart&quot;&gt;RDFa: What happens when web-pages get
+smart?&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;View more &lt;a href=&quot;http://www.slideshare.net/&quot;&gt;presentations&lt;/a&gt; from &lt;a href=&quot;http://www.slideshare.net/mark.birbeck&quot;&gt;Mark
+Birbeck&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 21 Oct 2009 00:00:00 +0100</pubDate>
+        <link>http://markbirbeck.com/event/mark%20birbeck/rdfa/2009/10/21/evangelising-rdfa-in-australia.html</link>
+        <guid isPermaLink="true">http://markbirbeck.com/event/mark%20birbeck/rdfa/2009/10/21/evangelising-rdfa-in-australia.html</guid>
+        
+        
+        <category>event</category>
+        
+        <category>mark birbeck</category>
+        
+        <category>rdfa</category>
         
       </item>
     
