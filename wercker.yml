@@ -1,0 +1,73 @@
+box: wercker/ruby
+build:
+  steps:
+    # Install dependencies
+    - bundle-install
+
+    # Execute jeykyll doctor command to validate the
+    # site against a list of known issues.
+    - script:
+        name: jekyll doctor
+        code: bundle exec jekyll doctor
+
+    - script:
+        name: sass compile
+        code: |-
+          mkdir -p 'assets/css/'
+          bundle exec sass --style compressed assets/scss/styles.scss:assets/css/styles.min.css --debug-info
+
+    # Generate staging, no drafts in here
+    - script:
+        name: generate staging site
+        code: |-
+          bundle exec jekyll build --trace
+
+    - script:
+        name: copy site output
+        code: |-
+          # Copy site to output directory for staging and production
+          mkdir "$WERCKER_OUTPUT_DIR/staging"
+          cp --recursive _site/* "$WERCKER_OUTPUT_DIR/staging/"
+
+          mkdir "$WERCKER_OUTPUT_DIR/production"
+          cp --recursive _site/* "$WERCKER_OUTPUT_DIR/production/"
+
+          # Copy post deploy script because it will not be copied automatically
+          # since we write to the wercker output directory.
+          cp "post-deploy-tests.sh" "$WERCKER_OUTPUT_DIR/post-deploy-tests.sh"
+
+    - create-file:
+        name: generate staging robots.txt
+        filename: $WERCKER_OUTPUT_DIR/staging/robots.txt
+        content: |-
+          # Go away! This is a staging version
+          # of markbirbeck.com, no need to index it.
+          User-agent: *
+          Disallow: /
+
+    - create-file:
+        name: generate production robots.txt
+        filename: $WERCKER_OUTPUT_DIR/production/robots.txt
+        content: |-
+          User-agent: *
+          Allow: /
+          Sitemap: http://markbirbeck.com/sitemap.xml
+
+    # The git-tag steps needs the repository
+    - script:
+        name: Copy .git repository
+        code: cp $WERCKER_ROOT/.git $WERCKER_OUTPUT_DIR -r
+
+deploy:
+  steps:
+    - s3sync:
+        key-id: $KEY
+        key-secret: $SECRET
+        bucket-url: $BUCKET
+        source-dir: $SOURCE
+
+    - script:
+        name: Execute post deploy tests
+        code: source post-deploy-tests.sh
+  after-steps:
+    - "pjvds/git-tag"

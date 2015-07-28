@@ -9,7 +9,10 @@ twitter_username: markbirbeck
 github_username:  markbirbeck
 
 # Build settings
-markdown: kramdown
+markdown: redcarpet
+rdiscount:
+  extensions: [smart]
+highlighter: true
 
 exclude: [
   'config.ru',
@@ -17,5 +20,7 @@ exclude: [
   'Gemfile.lock',
   node_modules,
   package.json,
-  'vendor'
+  'post-deploy-tests.sh',
+  'vendor',
+  'wercker.yml'
 ]
