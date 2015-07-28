@@ -12,7 +12,6 @@ github_username:  markbirbeck
 markdown: kramdown
 
 exclude:
-  - 'config.ru'
   - 'Gemfile'
   - 'Gemfile.lock'
   - node_modules
@@ -20,3 +19,4 @@ exclude:
   - 'post-deploy-tests.sh'
   - 'vendor'
   - 'wercker.yml'
+  - 'config.ru'
