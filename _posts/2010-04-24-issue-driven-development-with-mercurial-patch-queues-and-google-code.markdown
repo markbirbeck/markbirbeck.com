@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Issue-driven development with Mercurial patch queues and Google Code"
-date: 2010-04-24 00:00
+date: 2010-04-24
 comments: true
 categories: development
 ---

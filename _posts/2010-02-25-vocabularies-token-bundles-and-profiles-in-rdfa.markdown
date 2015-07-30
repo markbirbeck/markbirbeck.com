@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Vocabularies, token bundles and profiles in RDFa"
-date: 2010-02-25 00:00
+date: 2010-02-25
 comments: true
 categories:
  - thought
