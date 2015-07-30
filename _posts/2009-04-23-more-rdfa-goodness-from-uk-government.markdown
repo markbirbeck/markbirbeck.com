@@ -3,7 +3,7 @@ layout: post
 title: "More RDFa goodness from UK government web-sites"
 date: 2009-04-23
 comments: false
-categories:
+tags:
  - mark birbeck
  - news
  - rdfa

@@ -3,7 +3,7 @@ layout: post
 title: "The Semantic Web's Missing Link"
 date: 2009-06-16
 comments: false
-categories:
+tags:
  - event
  - mark birbeck
  - rdfa

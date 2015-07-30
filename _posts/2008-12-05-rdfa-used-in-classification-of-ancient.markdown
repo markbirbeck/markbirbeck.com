@@ -3,7 +3,7 @@ layout: post
 title: "RDFa used in classification of ancient ceramics"
 date: 2008-12-05
 comments: false
-categories:
+tags:
  - mark birbeck
  - rdfa
 ---

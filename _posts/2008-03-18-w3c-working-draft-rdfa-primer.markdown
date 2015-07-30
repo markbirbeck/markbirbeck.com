@@ -3,7 +3,7 @@ layout: post
 title: "W3C Working Draft: RDFa Primer"
 date: 2008-03-18
 comments: false
-categories:
+tags:
  - mark birbeck
  - rdfa
  - standard

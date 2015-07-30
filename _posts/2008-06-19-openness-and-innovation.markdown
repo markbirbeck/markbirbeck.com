@@ -3,7 +3,7 @@ layout: post
 title: "Openness and Innovation"
 date: 2008-06-19
 comments: false
-categories:
+tags:
  - event
  - mark birbeck
  - rdfa

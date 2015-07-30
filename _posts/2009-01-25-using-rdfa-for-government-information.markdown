@@ -3,7 +3,7 @@ layout: post
 title: "Using RDFa for Government Information"
 date: 2009-01-25
 comments: false
-categories:
+tags:
  - event
  - mark birbeck
  - rdfa

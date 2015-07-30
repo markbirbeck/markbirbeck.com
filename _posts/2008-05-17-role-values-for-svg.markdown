@@ -3,7 +3,7 @@ layout: post
 title: "@role values for SVG"
 date: 2008-05-17
 comments: false
-categories:
+tags:
  - xforms
  - role
 ---

@@ -3,7 +3,7 @@ layout: post
 title: "RDFa Tech Talk, at Google, 2008"
 date: 2008-05-30
 comments: false
-categories:
+tags:
  - video
  - mark birbeck
  - browser extension

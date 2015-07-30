@@ -3,7 +3,7 @@ layout: post
 title: "Declarative Ajax Programming with Ubiquity XForms"
 date: 2009-01-25
 comments: false
-categories:
+tags:
  - xforms
  - event
  - mark birbeck

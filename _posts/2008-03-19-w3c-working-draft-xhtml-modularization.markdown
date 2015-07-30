@@ -3,7 +3,7 @@ layout: post
 title: "W3C Working Draft: XHTML Modularization 1.1"
 date: 2008-03-19
 comments: false
-categories:
+tags:
  - mark birbeck
  - standard
 ---

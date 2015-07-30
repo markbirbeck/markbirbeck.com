@@ -3,7 +3,7 @@ layout: post
 title: "Ajax and progressive browser enhancement"
 date: 2007-07-17
 comments: false
-categories:
+tags:
  - mark birbeck
  - rdfa
 ---

@@ -3,7 +3,7 @@ layout: post
 title: "A busy week in RDFa-world"
 date: 2009-05-18
 comments: false
-categories:
+tags:
  - rdfa
  - drupal
 ---

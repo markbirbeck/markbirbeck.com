@@ -3,7 +3,7 @@ layout: post
 title: "Compact HTML: A mark-up language for micro-blogging"
 date: 2008-11-07
 comments: false
-categories:
+tags:
  - mark birbeck
  - rdfa
  - thought piece

@@ -3,7 +3,7 @@ layout: post
 title: "Evangelising RDFa in Australia"
 date: 2009-10-21
 comments: false
-categories:
+tags:
  - event
  - mark birbeck
  - rdfa

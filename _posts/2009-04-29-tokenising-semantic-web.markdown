@@ -3,7 +3,7 @@ layout: post
 title: "Tokenising the semantic web"
 date: 2009-04-29
 comments: false
-categories:
+tags:
  - rdfa
  - thought piece
 ---

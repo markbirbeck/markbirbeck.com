@@ -3,7 +3,7 @@ layout: post
 title: "Choosing a Blogging Platform"
 date: 2012-02-24
 comments: true
-categories: 
+tags: 
  - blogging
  - drupal
  - hyde

@@ -3,7 +3,7 @@ layout: post
 title: "Ubiquity library"
 date: 2008-06-05
 comments: false
-categories:
+tags:
  - xforms
  - technology
  - rdfa

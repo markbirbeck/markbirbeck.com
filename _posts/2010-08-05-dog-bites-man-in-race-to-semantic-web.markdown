@@ -3,7 +3,7 @@ layout: post
 title: "Dog bites man in race to Semantic Web"
 date: 2010-08-05
 comments: true
-categories: 
+tags: 
 ---
 
 Facebook's adoption of RDFa as a way to provide extra features to its users has

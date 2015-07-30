@@ -3,7 +3,7 @@ layout: post
 title: "XTech 2008: The 5 minute guide to RDFa...in only 6 minutes and 40 seconds"
 date: 2008-05-07
 comments: false
-categories:
+tags:
  - event
  - mark birbeck
  - rdfa

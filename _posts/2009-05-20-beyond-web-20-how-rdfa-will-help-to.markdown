@@ -3,7 +3,7 @@ layout: post
 title: "Beyond web 2.0 -- How RDFa will help to democratise data on the web"
 date: 2009-05-20
 comments: false
-categories:
+tags:
  - mark birbeck
  - rdfa
  - thought piece

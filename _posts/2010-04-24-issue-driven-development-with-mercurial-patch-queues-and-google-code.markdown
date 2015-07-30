@@ -3,7 +3,7 @@ layout: post
 title: "Issue-driven development with Mercurial patch queues and Google Code"
 date: 2010-04-24
 comments: true
-categories: development
+tags: development
 ---
 
 _Note that since this post was written I've moved to Git and GitHub. However,

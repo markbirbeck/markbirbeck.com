@@ -3,7 +3,7 @@ layout: post
 title: "Duck-typing and XForms"
 date: 2009-02-03
 comments: false
-categories:
+tags:
  - xforms
  - mark birbeck
  - role

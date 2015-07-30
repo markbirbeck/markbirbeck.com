@@ -3,7 +3,7 @@ layout: post
 title: "SugarCRM, RightScale and EC2"
 date: 2008-02-27
 comments: false
-categories:
+tags:
  - mark birbeck
 ---
 [![SugarCRM Logo](http://www.sugarcrm.com/crm/images/SugarCRM_logo.gif)](http:

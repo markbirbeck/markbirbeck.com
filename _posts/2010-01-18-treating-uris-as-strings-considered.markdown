@@ -3,7 +3,7 @@ layout: post
 title: "Treating URIs as strings considered dangerous"
 date: 2010-01-18
 comments: false
-categories:
+tags:
  - xforms
  - mark birbeck
  - thought piece

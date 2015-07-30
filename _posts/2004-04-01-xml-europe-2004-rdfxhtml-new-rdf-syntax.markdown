@@ -3,7 +3,7 @@ layout: post
 title: "XML Europe 2004: RDF/XHTML: A new RDF syntax"
 date: 2004-04-01
 comments: false
-categories:
+tags:
  - event
  - rdfa
 ---
