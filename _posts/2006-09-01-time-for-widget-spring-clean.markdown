@@ -2,7 +2,7 @@
 layout: post
 title: "Time for a widget spring clean"
 date: 2006-09-01
-comments: false
+comments: true
 ---
 [[Google Calendar](http://www.google.com/calendar) is a good example of an
 application that benefits from features of the Sidewinder Viewer, without the

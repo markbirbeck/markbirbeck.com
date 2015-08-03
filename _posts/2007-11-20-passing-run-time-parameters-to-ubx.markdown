@@ -2,7 +2,7 @@
 layout: post
 title: "Passing run-time parameters to UBX Viewer, via the URL"
 date: 2007-11-20
-comments: false
+comments: true
 ---
 The Ubiquity Viewer contains a growing number of innovative features, and one
 I'd like to highlight here is the ability to pass run-time parameters for a

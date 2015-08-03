@@ -2,7 +2,7 @@
 layout: post
 title: "How formsPlayer can help take XForms to new platforms"
 date: 2008-04-06
-comments: false
+comments: true
 ---
 A short while ago we made the [formsPlayer source
 code](http://code.google.com/p/formsplayer/) available under an open source

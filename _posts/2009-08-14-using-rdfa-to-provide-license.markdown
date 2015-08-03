@@ -2,7 +2,7 @@
 layout: post
 title: "Using RDFa to Provide License Information to Google Image Search"
 date: 2009-08-14
-comments: false
+comments: true
 tags:
  - mark birbeck
  - rdfa

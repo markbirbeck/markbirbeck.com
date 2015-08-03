@@ -2,7 +2,7 @@
 layout: post
 title: "XForms plays key role in financial services application from 1st Software"
 date: 2008-05-14
-comments: false
+comments: true
 tags:
  - xforms
  - news

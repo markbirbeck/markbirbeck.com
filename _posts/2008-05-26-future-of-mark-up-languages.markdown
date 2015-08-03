@@ -2,7 +2,7 @@
 layout: post
 title: "The future of mark-up languages"
 date: 2008-05-26
-comments: false
+comments: true
 tags:
  - xh
  - xforms

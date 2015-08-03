@@ -2,7 +2,7 @@
 layout: post
 title: "A First Course in RDF and RDFS (Resource Description Framework and Resource Description Framework Schema)"
 date: 2008-05-26
-comments: false
+comments: true
 ---
 RDF is a key W3C specification and a foundational component of the Semantic
 Web. This tutorial was given at SemTech 2008, and explained the basics of RDF

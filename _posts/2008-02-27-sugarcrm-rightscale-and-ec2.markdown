@@ -2,7 +2,7 @@
 layout: post
 title: "SugarCRM, RightScale and EC2"
 date: 2008-02-27
-comments: false
+comments: true
 tags:
  - mark birbeck
 ---

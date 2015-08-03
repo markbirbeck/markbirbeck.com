@@ -2,7 +2,7 @@
 layout: post
 title: "The 10 minute guide to Sidewinder (or 'How to turn a web app into a desktop app without programming')"
 date: 2008-01-14
-comments: false
+comments: true
 ---
 Welcome to the quickest way to get up and running with Sidewinder, the open
 source web applications framework. This post is intended as a quick step-by-

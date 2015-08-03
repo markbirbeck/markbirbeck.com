@@ -2,7 +2,7 @@
 layout: post
 title: "Obtaining data from a submission that's in error"
 date: 2006-09-25
-comments: false
+comments: true
 ---
 Some services return non-successful HTTP status codes, but still expect the
 client to respond to the body of the response. For example, a SOAP request to

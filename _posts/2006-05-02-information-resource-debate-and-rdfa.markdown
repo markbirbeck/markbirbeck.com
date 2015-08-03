@@ -2,7 +2,7 @@
 layout: post
 title: "The Information Resource Debate, and RDFa"
 date: 2006-05-02
-comments: false
+comments: true
 tags:
  - rdfa
  - semantic web

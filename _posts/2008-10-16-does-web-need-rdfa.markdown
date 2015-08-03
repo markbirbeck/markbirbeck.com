@@ -2,7 +2,7 @@
 layout: post
 title: "Does the web need RDFa?"
 date: 2008-10-16
-comments: false
+comments: true
 ---
 After over four years at the W3C, RDFa (nee RDF/A, nee RDF/XHTML) is now a
 full recommendation, which to all intents and purposes means 'it's a

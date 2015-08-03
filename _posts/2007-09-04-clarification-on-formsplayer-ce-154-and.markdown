@@ -2,7 +2,7 @@
 layout: post
 title: "Clarification on formsPlayer CE 1.5.4 and 1.5.5"
 date: 2007-09-04
-comments: false
+comments: true
 ---
 Over in the Upgrade forum [Jozef Aerts has asked for clarification on versions
 1.5.4 and 1.5.5](/node/1049). As he rightly points out, the 1.5.4 builds of

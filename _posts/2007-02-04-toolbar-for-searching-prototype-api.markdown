@@ -2,7 +2,7 @@
 layout: post
 title: "A toolbar for searching the Prototype API documentation"
 date: 2007-02-04
-comments: false
+comments: true
 ---
 [![formsPlayer toolbar for searching Prototype API docs](http://farm1.static.f
 lickr.com/128/380050989_f83c6bccfc_t.jpg)](http://www.flickr.com/photos/mark-

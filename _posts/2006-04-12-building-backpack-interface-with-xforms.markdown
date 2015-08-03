@@ -2,7 +2,7 @@
 layout: post
 title: "Building a Backpack interface with XForms"
 date: 2006-04-12
-comments: false
+comments: true
 tags:
  - xforms
  - web 2.0

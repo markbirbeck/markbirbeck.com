@@ -2,7 +2,7 @@
 layout: post
 title: "Seminar: The possibilities of RDFa and the Semantic Web"
 date: 2009-06-18
-comments: false
+comments: true
 tags:
  - event
  - mark birbeck

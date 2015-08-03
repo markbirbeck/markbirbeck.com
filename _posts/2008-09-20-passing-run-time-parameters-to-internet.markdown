@@ -2,7 +2,7 @@
 layout: post
 title: "Passing run-time parameters to internet applications"
 date: 2008-09-20
-comments: false
+comments: true
 tags:
  - xforms
  - mark birbeck

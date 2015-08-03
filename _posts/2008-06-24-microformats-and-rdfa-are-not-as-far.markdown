@@ -2,7 +2,7 @@
 layout: post
 title: "Microformats and RDFa are not as far apart as people think"
 date: 2008-06-24
-comments: false
+comments: true
 tags:
  - mark birbeck
  - rdfa

@@ -2,7 +2,7 @@
 layout: post
 title: "RDFa: What It Is and What It's For"
 date: 2008-03-14
-comments: false
+comments: true
 tags:
  - event
  - mark birbeck

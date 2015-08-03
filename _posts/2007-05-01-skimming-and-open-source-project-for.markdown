@@ -2,7 +2,7 @@
 layout: post
 title: "Skimming, and an Open Source project for a GData XForms client"
 date: 2007-05-01
-comments: false
+comments: true
 ---
 For me, one of the most exciting developments on the web in recent years has
 been the growth in services that let you manage raw data. Many of the most

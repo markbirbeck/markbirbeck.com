@@ -2,7 +2,7 @@
 layout: post
 title: 'submission with @replace="text", and the new target attribute'
 date: 2006-09-22
-comments: false
+comments: true
 ---
 This week, Mark came back from the XForms Working Group face-to-face meeting
 with news of a potential new XForms feature--the ability to handle non-XML

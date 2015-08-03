@@ -2,7 +2,7 @@
 layout: post
 title: "Upcoming talks on RDF, RDFa and XForms"
 date: 2008-05-01
-comments: false
+comments: true
 ---
 May is going to be pretty busy with talks about XForms, RDF and RDFa coming
 up.

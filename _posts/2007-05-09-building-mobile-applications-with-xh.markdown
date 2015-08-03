@@ -2,7 +2,7 @@
 layout: post
 title: "Building Mobile Applications with xH"
 date: 2007-05-09
-comments: false
+comments: true
 tags:
  - xh
  - xforms

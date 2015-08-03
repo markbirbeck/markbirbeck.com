@@ -2,7 +2,7 @@
 layout: post
 title: "RDFa and SEO"
 date: 2009-12-16
-comments: false
+comments: true
 tags:
  - presentation
  - rdfa

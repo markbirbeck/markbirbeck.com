@@ -2,7 +2,7 @@
 layout: post
 title: "A better XForms news service"
 date: 2008-01-29
-comments: false
+comments: true
 ---
 For a long time now we've placed useful XForms links at the bottom of the page
 on this site. But the problem is that we don't always capture all of the

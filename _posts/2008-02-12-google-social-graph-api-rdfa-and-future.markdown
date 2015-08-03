@@ -2,7 +2,7 @@
 layout: post
 title: "Google's Social Graph API, RDFa and the future of web search"
 date: 2008-02-12
-comments: false
+comments: true
 tags:
  - mark birbeck
  - rdfa

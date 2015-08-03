@@ -2,7 +2,7 @@
 layout: post
 title: "The Joys of Mercurial"
 date: 2009-12-18
-comments: false
+comments: true
 ---
 No-one needs to be told that any project you work on needs a version-control
 system. Nowadays, even when writing documents or OWL ontologies, I'll use

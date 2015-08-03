@@ -2,7 +2,7 @@
 layout: post
 title: "Clarifying the NextWeb Story, and the question of vision"
 date: 2008-05-31
-comments: false
+comments: true
 ---
 Earlier in the week I had a most enjoyable 24 hours in Amsterdam. The reason
 for being there was the [Kings of Code]() conference on Tuesday, but the trip

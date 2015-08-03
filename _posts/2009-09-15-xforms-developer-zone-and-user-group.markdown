@@ -2,7 +2,7 @@
 layout: post
 title: "XForms Developer Zone and User Group launched"
 date: 2009-09-15
-comments: false
+comments: true
 tags:
  - xforms
  - mark birbeck

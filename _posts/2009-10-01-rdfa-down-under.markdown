@@ -2,7 +2,7 @@
 layout: post
 title: "RDFa down under"
 date: 2009-10-01
-comments: false
+comments: true
 tags:
  - mark birbeck
  - news

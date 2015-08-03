@@ -2,7 +2,7 @@
 layout: post
 title: "XForms custom controls, using XAML and Silverlight"
 date: 2007-05-30
-comments: false
+comments: true
 ---
 [![Silverlight clock as a custom control in XForms/formsPlayer](http://farm1.s
 tatic.flickr.com/192/521945943_0900de30cb_t.jpg)](http://www.flickr.com/photos

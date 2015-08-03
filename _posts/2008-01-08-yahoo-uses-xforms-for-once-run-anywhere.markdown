@@ -2,7 +2,7 @@
 layout: post
 title: "Yahoo! uses XForms for 'write once, run anywhere' mobile applications"
 date: 2008-01-08
-comments: false
+comments: true
 ---
 [Yahoo! recently announced their entry into the mobile web applications space]
 (http://yhoo.client.shareholder.com/press/releasedetail.cfm?ReleaseID=284835),

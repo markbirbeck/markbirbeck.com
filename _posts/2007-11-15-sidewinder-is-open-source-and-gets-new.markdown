@@ -2,7 +2,7 @@
 layout: post
 title: "Sidewinder is open source and gets a new home"
 date: 2007-11-15
-comments: false
+comments: true
 ---
 The transition of Sidewinder, our semantic web applications viewer, to an open
 source project is now complete. It took quite a lot of work in a number of

@@ -2,7 +2,7 @@
 layout: post
 title: "Using JavaScript's replace function to stem the spread of eval()"
 date: 2008-10-17
-comments: false
+comments: true
 ---
 One of the recurring patterns in the [Ubiquity RDFa library](http://ubiquity-
 rdfa.googlecode.com/) is the need to substitute the property of an object into

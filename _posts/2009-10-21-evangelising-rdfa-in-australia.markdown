@@ -2,7 +2,7 @@
 layout: post
 title: "Evangelising RDFa in Australia"
 date: 2009-10-21
-comments: false
+comments: true
 tags:
  - event
  - mark birbeck

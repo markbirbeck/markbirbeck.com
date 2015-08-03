@@ -2,7 +2,7 @@
 layout: post
 title: "RDFa Tech Talk, at Google, 2009"
 date: 2009-09-21
-comments: false
+comments: true
 tags:
  - video
  - event

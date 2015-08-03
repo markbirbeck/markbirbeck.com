@@ -2,7 +2,7 @@
 layout: post
 title: "W3C Working Draft: XHTML 2"
 date: 2008-03-19
-comments: false
+comments: true
 ---
 ![W3C logo](http://www.w3.org/Icons/w3c_home)
 

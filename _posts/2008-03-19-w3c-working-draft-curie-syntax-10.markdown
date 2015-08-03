@@ -2,7 +2,7 @@
 layout: post
 title: "W3C Working Draft: CURIE Syntax 1.0"
 date: 2008-03-19
-comments: false
+comments: true
 tags:
  - mark birbeck
  - standard
