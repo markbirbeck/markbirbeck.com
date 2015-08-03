@@ -8,6 +8,8 @@ permalink: pretty
 url: "http://markbirbeck.com" # the base hostname & protocol for your site
 twitter_username: markbirbeck
 github_username:  markbirbeck
+disqus_shortname: markbirbeck
+disqus_identifier: http://markbirbeck.com
 
 # Build settings
 markdown: kramdown
@@ -22,3 +24,5 @@ exclude:
   - 'wercker.yml'
   - '_site.from.jekyll'
   - 'config.ru'
+
+#verbose: true

@@ -2,6 +2,9 @@
 
   <div class="wrapper">
 
+    {% if page.comments %}
+      {% include comments.html %}
+    {% endif %}
     <h2 class="footer-heading">{{ site.title }}</h2>
 
     <div class="footer-col-wrapper">
