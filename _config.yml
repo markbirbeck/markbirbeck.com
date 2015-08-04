@@ -10,6 +10,7 @@ twitter_username: markbirbeck
 github_username:  markbirbeck
 disqus_shortname: markbirbeck
 disqus_identifier: http://markbirbeck.com
+google_tag_manager: GTM-5Z8G6B
 
 # Build settings
 markdown: kramdown
