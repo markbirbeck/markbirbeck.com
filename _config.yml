@@ -26,4 +26,6 @@ exclude:
   - '_site.from.jekyll'
   - 'config.ru'
 
+layouts: ./node_modules/layout-liquid-jekyll-basic/layouts
+includes: ./node_modules/layout-liquid-jekyll-basic/partials
 #verbose: true
