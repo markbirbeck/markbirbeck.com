@@ -55,7 +55,7 @@ All of these improvements will come, bundled in a new SSG that binds everything 
 
 ## layout-liquid-jekyll-base
 
-The [layout-liquid-jekyll-base](https://github.com/markbirbeck/layout-liquid-jekyll-base) module is the first step in this process. It only includes layout files that come with a standard Jekyll site which means there's no CSS or SASS, no helper functions, and no partials to support features like Disqus and Google Analytics.
+The [layout-liquid-jekyll-base](https://www.npmjs.com/package/layout-liquid-jekyll-basic) module is the first step in this process. It only includes layout files that come with a standard Jekyll site which means there's no CSS or SASS, no helper functions, and no partials to support features like Disqus and Google Analytics.
 
 The new site generator and this layout are already being used to drive this blog, so even though the post you are reading looks and smells like a basic Jekyll blog, it's 100% nodejs. All of this means that as the various pieces improve, so will this blog.
 
