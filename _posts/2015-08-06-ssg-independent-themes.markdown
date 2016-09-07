@@ -9,7 +9,7 @@ tags:
  - development
 ---
 
-There are [lots of static site generators (SSG)](https://www.staticgen.com/),written in a variety of languages and many of them are incredibly powerful. But when it comes to theming they all seem to suffer from the same problems.
+There are [lots of static site generators (SSG)](https://www.staticgen.com/), written in a variety of languages and many of them are incredibly powerful. But when it comes to theming they all seem to suffer from the same problems.
 
 ## Installation
 
