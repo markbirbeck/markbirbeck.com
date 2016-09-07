@@ -9,6 +9,9 @@
   "author": "Mark Birbeck <mark.birbeck@gmail.com> (http://markbirbeck.com/)",
   "license": "MIT",
   "dependencies": {
-    "layout-liquid-jekyll-basic": "^0.1.0"
+    "linked-data-partials": "^0.5.1",
+    "markheim": "^1.2.0",
+    "mdl-liquid-layout": "^0.5.0",
+    "mdl-sass-mixins": "^0.5.0"
   }
 }
