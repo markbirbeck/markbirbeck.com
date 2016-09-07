@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "XForms custom controls, using XAML and Silverlight"
 date: 2007-05-30
 comments: true

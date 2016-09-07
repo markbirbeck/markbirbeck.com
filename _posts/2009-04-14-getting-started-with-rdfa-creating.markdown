@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Getting started with RDFa: Creating a basic FOAF profile"
 date: 2009-04-14
 comments: true

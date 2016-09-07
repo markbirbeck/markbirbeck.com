@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "The Semantic Web's Missing Link"
 date: 2009-06-25
 comments: true

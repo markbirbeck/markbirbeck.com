@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Yahoo!'s Open Hack"
 date: 2009-05-08
 comments: true

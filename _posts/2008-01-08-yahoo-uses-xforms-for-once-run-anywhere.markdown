@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Yahoo! uses XForms for 'write once, run anywhere' mobile applications"
 date: 2008-01-08
 comments: true

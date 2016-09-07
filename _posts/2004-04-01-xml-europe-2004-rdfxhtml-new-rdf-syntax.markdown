@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "XML Europe 2004: RDF/XHTML: A new RDF syntax"
 date: 2004-04-01
 comments: true

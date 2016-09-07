@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Duck-typing and XForms"
 date: 2009-02-03
 comments: true

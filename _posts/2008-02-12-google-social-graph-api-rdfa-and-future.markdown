@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Google's Social Graph API, RDFa and the future of web search"
 date: 2008-02-12
 comments: true

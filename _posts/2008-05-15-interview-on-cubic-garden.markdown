@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Interview on Cubic Garden"
 date: 2008-05-15
 comments: true

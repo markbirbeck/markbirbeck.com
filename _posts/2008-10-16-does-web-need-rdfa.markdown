@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Does the web need RDFa?"
 date: 2008-10-16
 comments: true

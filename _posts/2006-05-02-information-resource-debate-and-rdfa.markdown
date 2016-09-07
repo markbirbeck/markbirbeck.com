@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "The Information Resource Debate, and RDFa"
 date: 2006-05-02
 comments: true

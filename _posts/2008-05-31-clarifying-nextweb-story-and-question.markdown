@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Clarifying the NextWeb Story, and the question of vision"
 date: 2008-05-31
 comments: true

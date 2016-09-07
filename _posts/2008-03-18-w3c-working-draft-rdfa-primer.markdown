@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "W3C Working Draft: RDFa Primer"
 date: 2008-03-18
 comments: true

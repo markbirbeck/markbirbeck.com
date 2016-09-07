@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Choosing a Blogging Platform"
 date: 2012-02-24
 comments: true

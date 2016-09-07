@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "RDFa: What It Is and What It's For"
 date: 2008-03-14
 comments: true

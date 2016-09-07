@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Openness and Innovation"
 date: 2008-06-19
 comments: true

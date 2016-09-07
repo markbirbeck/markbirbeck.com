@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Ubiquity library"
 date: 2008-06-05
 comments: true

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "RDFj: Semantic objects in JSON"
 date: 2009-04-20
 comments: true

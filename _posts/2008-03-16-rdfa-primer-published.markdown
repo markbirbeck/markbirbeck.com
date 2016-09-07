@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "RDFa Primer published"
 date: 2008-03-16
 comments: true

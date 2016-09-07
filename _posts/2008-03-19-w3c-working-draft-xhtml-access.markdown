@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "W3C Working Draft: XHTML Access Attribute"
 date: 2008-03-19
 comments: true

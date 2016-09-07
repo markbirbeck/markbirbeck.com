@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "RDFa down under"
 date: 2009-10-01
 comments: true

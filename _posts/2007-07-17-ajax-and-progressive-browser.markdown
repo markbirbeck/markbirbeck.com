@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Ajax and progressive browser enhancement"
 date: 2007-07-17
 comments: true

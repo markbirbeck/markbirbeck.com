@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Building a Backpack interface with XForms"
 date: 2006-04-12
 comments: true

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "SugarCRM, RightScale and EC2"
 date: 2008-02-27
 comments: true

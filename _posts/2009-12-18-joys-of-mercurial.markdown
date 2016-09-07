@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "The Joys of Mercurial"
 date: 2009-12-18
 comments: true

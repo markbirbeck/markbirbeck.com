@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Building Mobile Applications with xH"
 date: 2007-05-09
 comments: true

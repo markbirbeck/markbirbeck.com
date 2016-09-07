@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Declarative Ajax Programming with Ubiquity XForms"
 date: 2009-01-25
 comments: true

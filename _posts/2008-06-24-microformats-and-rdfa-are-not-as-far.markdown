@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Microformats and RDFa are not as far apart as people think"
 date: 2008-06-24
 comments: true

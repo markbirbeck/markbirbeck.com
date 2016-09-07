@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "XForms Developer Zone and User Group launched"
 date: 2009-09-15
 comments: true

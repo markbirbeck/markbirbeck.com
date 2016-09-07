@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Linked Data and RDFa in US and UK government web-sites"
 date: 2009-11-20
 comments: true

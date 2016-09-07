@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "The 10 minute guide to Sidewinder (or 'How to turn a web app into a desktop app without programming')"
 date: 2008-01-14
 comments: true

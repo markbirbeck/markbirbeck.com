@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: 'submission with @replace="text", and the new target attribute'
 date: 2006-09-22
 comments: true

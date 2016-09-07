@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "More RDFa goodness from UK government web-sites"
 date: 2009-04-23
 comments: true

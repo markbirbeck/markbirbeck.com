@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "RDFa Tech Talk, at Google, 2009"
 date: 2009-09-21
 comments: true

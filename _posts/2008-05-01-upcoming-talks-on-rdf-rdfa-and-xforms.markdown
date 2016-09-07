@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Upcoming talks on RDF, RDFa and XForms"
 date: 2008-05-01
 comments: true

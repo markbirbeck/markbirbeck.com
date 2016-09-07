@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: entry
 title: "Tokenising the semantic web"
 date: 2009-04-29
 comments: true
