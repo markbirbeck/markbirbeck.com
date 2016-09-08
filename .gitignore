@@ -1,5 +1,6 @@
 .env
 .sass-cache
+_drafts
 _site
 _site.from.jekyll
 _testposts
