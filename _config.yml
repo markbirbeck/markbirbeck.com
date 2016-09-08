@@ -20,11 +20,11 @@ exclude:
   - 'Gemfile.lock'
   - node_modules
   - package.json
-  - 'post-deploy-tests.sh'
   - 'vendor'
   - 'wercker.yml'
   - '_site.from.jekyll'
   - 'config.ru'
+  - _testposts
 
 include: ["./node_modules/mdl-sass-mixins/material.js"]
 layouts: ./node_modules/mdl-liquid-layout/layouts

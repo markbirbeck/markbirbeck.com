@@ -2,5 +2,6 @@
 .sass-cache
 _site
 _site.from.jekyll
+_testposts
 
 node_modules
