@@ -19,8 +19,6 @@ markdown: kramdown
 exclude:
   - 'Gemfile'
   - 'Gemfile.lock'
-  - node_modules
-  - package.json
   - 'vendor'
   - 'wercker.yml'
   - '_site.from.jekyll'
