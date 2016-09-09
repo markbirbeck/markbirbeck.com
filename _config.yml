@@ -30,5 +30,5 @@ layouts: ./node_modules/mdl-liquid-layout/layouts
 includes: [./node_modules/linked-data-partials,./node_modules/mdl-liquid-layout/partials]
 sass:
   sass_dir: ./node_modules/mdl-sass-mixins
-keep_files:   [".git", ".svn", "images"]
+keep_files:   [".git", ".svn"]
 #verbose: true
