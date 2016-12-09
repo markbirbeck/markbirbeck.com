@@ -17,6 +17,35 @@ At various times I've tried to capture the latest state of my knowledge in Gists
 This blog post describes how I went about it, and -- if the idea appeals to you -- how you could do the same.
 
 <!--more-->
+## Using the Repo
+
+If you don't want to create your own repo but think mine might be useful, then you could clone it on GitHub, or clone it locally and pick which branch you want.
+
+If you'd like to create a new project that is initialised to one of the templates, and has no connection with my original repo, then do the following (after selecting the directory where you keep your projects):
+
+```shell
+export APP_TYPE=node
+git clone \
+  -b ${APP_TYPE} \
+  --single-branch \
+  git@github.com:markbirbeck/js-app-templates.git \
+  my-new-project
+cd my-new-project
+```
+
+Now, rename the branch to `master`:
+
+```shell
+git branch -m ${APP_TYPE} master
+```
+
+Finally, remove any connection between your repo and the remote one:
+
+```shell
+git branch -d -r origin/${APP_TYPE}
+git branch --unset-upstream
+git remote remove origin
+```
 
 ## Some Principles Guiding the Approach
 
