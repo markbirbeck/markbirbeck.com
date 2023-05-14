@@ -15,6 +15,9 @@ google_tag_manager: GTM-5Z8G6B
 
 # Build settings
 markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
 
 exclude:
   - 'Gemfile'
