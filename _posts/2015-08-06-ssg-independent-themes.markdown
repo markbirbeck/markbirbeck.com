@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "SSG-independent Themes"
 date: 2015-08-06
 comments: true

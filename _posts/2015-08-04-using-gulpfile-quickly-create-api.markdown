@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Using a Gulpfile to Quickly Create an API"
 date: 2015-08-04
 comments: true

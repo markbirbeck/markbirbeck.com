@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "webdriver-mocha: Using Selenium Webdriver with Mocha for End-to-end Testing"
 date: 2016-01-04
 comments: true

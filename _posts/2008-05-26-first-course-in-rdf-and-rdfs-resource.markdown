@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "A First Course in RDF and RDFS (Resource Description Framework and Resource Description Framework Schema)"
 date: 2008-05-26
 comments: true

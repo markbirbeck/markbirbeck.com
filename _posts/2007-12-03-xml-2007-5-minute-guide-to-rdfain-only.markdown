@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "XML 2007: The 5 minute guide to RDFa...in only 6 minutes and 40 seconds"
 date: 2007-12-03
 comments: true

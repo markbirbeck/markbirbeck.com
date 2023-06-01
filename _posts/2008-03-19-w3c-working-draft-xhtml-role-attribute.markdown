@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "W3C Working Draft: XHTML Role Attribute Module"
 date: 2008-03-19
 comments: true

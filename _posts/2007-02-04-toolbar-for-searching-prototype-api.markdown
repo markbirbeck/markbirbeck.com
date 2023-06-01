@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "A toolbar for searching the Prototype API documentation"
 date: 2007-02-04
 comments: true

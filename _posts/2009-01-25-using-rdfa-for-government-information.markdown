@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Using RDFa for Government Information"
 date: 2009-01-25
 comments: true

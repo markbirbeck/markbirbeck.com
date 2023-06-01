@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Setting Up a Default App Template With Git"
 date: 2016-12-07
 comments: true

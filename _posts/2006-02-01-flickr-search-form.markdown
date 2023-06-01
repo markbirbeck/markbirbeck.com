@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "A Flickr Search Form"
 date: 2006-02-01
 comments: true

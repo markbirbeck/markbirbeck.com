@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Writing for Streams and Vinyl...Not Gulp"
 date: 2015-08-11
 comments: true

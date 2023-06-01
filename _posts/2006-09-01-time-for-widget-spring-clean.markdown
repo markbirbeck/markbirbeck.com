@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Time for a widget spring clean"
 date: 2006-09-01
 comments: true

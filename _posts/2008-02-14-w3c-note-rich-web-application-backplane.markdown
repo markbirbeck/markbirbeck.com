@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "W3C Note: Rich Web Application Backplane"
 date: 2008-02-14
 comments: true

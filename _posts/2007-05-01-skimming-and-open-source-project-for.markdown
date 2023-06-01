@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Skimming, and an Open Source project for a GData XForms client"
 date: 2007-05-01
 comments: true

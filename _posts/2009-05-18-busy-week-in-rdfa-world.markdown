@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "A busy week in RDFa-world"
 date: 2009-05-18
 comments: true

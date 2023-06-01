@@ -15,6 +15,9 @@ google_tag_manager: GTM-5Z8G6B
 
 # Build settings
 markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
 
 exclude:
   - 'Gemfile'
@@ -24,11 +27,4 @@ exclude:
   - '_site.from.jekyll'
   - 'config.ru'
   - _testposts
-
-include: ["./node_modules/mdl-sass-mixins/material.js"]
-layouts: ./node_modules/mdl-liquid-layout/layouts
-includes: [./_includes,./node_modules/linked-data-partials,./node_modules/mdl-liquid-layout/partials]
-sass:
-  sass_dir: ./node_modules/mdl-sass-mixins
-keep_files:   [".git", ".svn"]
 #verbose: true

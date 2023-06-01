@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "RDFa means extensibility (which is why some people will never support it)"
 date: 2009-01-20
 comments: true
