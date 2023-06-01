@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Linking issues and revisions in Google Code"
 date: 2009-08-23
 comments: true

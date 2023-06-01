@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Evangelising RDFa in Australia"
 date: 2009-10-21
 comments: true

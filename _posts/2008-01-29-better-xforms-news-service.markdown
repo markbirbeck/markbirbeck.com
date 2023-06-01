@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "A better XForms news service"
 date: 2008-01-29
 comments: true

@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Clarification on formsPlayer CE 1.5.4 and 1.5.5"
 date: 2007-09-04
 comments: true

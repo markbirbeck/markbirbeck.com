@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Dog bites man in race to Semantic Web"
 date: 2010-08-05
 comments: true

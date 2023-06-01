@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "How formsPlayer can help take XForms to new platforms"
 date: 2008-04-06
 comments: true

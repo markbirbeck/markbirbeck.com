@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "RDFa and SEO"
 date: 2009-12-16
 comments: true

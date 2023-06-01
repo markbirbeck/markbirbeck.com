@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Why You Need an Ontology (Schema.org, JSON-LD and ElasticSearch - Part 1)"
 date: 2016-11-14
 comments: true

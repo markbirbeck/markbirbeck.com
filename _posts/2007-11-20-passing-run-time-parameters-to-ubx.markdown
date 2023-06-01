@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Passing run-time parameters to UBX Viewer, via the URL"
 date: 2007-11-20
 comments: true

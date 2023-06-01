@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Using JavaScript's replace function to stem the spread of eval()"
 date: 2008-10-17
 comments: true

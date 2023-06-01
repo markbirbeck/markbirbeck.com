@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Treating URIs as strings considered dangerous"
 date: 2010-01-18
 comments: true

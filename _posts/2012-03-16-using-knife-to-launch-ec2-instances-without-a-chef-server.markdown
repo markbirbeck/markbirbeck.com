@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Using Knife to launch EC2 instances without a Chef Server"
 date: 2012-03-16
 comments: true

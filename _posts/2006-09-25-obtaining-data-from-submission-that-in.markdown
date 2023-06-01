@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Obtaining data from a submission that's in error"
 date: 2006-09-25
 comments: true

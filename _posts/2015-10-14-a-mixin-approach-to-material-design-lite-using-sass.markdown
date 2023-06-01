@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "A Mixin Approach to Material Design Lite Using Sass"
 date: 2015-10-14
 comments: true

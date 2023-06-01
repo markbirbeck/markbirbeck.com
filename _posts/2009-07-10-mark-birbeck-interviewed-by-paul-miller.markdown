@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Mark Birbeck interviewed by Paul Miller about RDFa"
 date: 2009-07-10
 comments: true

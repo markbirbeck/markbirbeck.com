@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "Sidewinder is open source and gets a new home"
 date: 2007-11-15
 comments: true

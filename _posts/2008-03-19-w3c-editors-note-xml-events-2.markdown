@@ -1,5 +1,5 @@
 ---
-layout: entry
+layout: post
 title: "W3C Editors' Note: XML Events 2"
 date: 2008-03-19
 comments: true
