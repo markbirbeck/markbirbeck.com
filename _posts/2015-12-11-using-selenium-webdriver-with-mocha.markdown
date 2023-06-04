@@ -85,7 +85,7 @@ describe('my blog', function() {
 });
 ```
 
-(For more examples see [Writing Tests](http://bit.ly/1OQozM4) and [Promises](http://bit.ly/1OQoF6r) in the [WebDriverJS User’s Guide](http://bit.ly/1OQoF6r).)
+(For more examples see [Writing Tests](http://bit.ly/1OQozM4) and [Promises](http://bit.ly/1OQoF6r) in the [WebDriverJS User's Guide](http://bit.ly/1OQoF6r).)
 
 ## Improvements to the Template
 
